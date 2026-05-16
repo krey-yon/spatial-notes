@@ -36,15 +36,15 @@ const TrashZone = forwardRef<HTMLDivElement, Props>(function TrashZone(
           <motion.div
             animate={{
               backgroundColor: active
-                ? 'rgba(255, 45, 85, 0.92)'
-                : 'rgba(255,255,255,0.35)',
+                ? 'rgba(244, 63, 94, 0.90)'
+                : 'rgba(24,24,31,0.50)',
               color: active ? '#ffffff' : 'var(--color-ink-700)',
             }}
             transition={{ duration: 0.18, ease: EASE_OUT }}
             style={{
               boxShadow: active
-                ? '0 12px 36px -6px rgba(255,45,85,0.55), 0 0 0 1px rgba(255,45,85,0.4), inset 0 1px 0 rgba(255,255,255,0.5)'
-                : 'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 0 0 0.5px rgba(255,255,255,0.55), 0 6px 14px -4px rgba(0,0,0,0.08), 0 22px 48px -12px rgba(0,0,0,0.18)',
+                ? '0 12px 36px -6px rgba(244,63,94,0.50), 0 0 0 1px rgba(244,63,94,0.35), inset 0 1px 0 rgba(255,255,255,0.04)'
+                : 'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 0.5px rgba(255,255,255,0.04), 0 6px 14px -4px rgba(0,0,0,0.25), 0 22px 48px -12px rgba(0,0,0,0.35)',
               backdropFilter: 'saturate(220%) blur(32px)',
               WebkitBackdropFilter: 'saturate(220%) blur(32px)',
             }}
