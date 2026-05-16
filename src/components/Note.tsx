@@ -13,18 +13,18 @@ interface TintStyle {
 }
 
 const TINT: Record<NoteTint, TintStyle> = {
-  cream:  { bg: 'bg-[var(--color-note-cream)]',  accent: '#f5b800' },
-  banana: { bg: 'bg-[var(--color-note-banana)]', accent: '#e8c500' },
-  sand:   { bg: 'bg-[var(--color-note-sand)]',   accent: '#ff9500' },
-  coral:  { bg: 'bg-[var(--color-note-coral)]',  accent: '#ff6f4d' },
-  rose:   { bg: 'bg-[var(--color-note-rose)]',   accent: '#ff2d55' },
-  blush:  { bg: 'bg-[var(--color-note-blush)]',  accent: '#ff6d96' },
-  lilac:  { bg: 'bg-[var(--color-note-lilac)]',  accent: '#af52de' },
-  sky:    { bg: 'bg-[var(--color-note-sky)]',    accent: '#007aff' },
-  aqua:   { bg: 'bg-[var(--color-note-aqua)]',   accent: '#00b8b3' },
-  mint:   { bg: 'bg-[var(--color-note-mint)]',   accent: '#34c759' },
-  sage:   { bg: 'bg-[var(--color-note-sage)]',   accent: '#6fa45a' },
-  slate:  { bg: 'bg-[var(--color-note-slate)]',  accent: '#6f7986' },
+  onyx:     { bg: 'bg-[var(--color-note-onyx)]',     accent: '#818cf8' },
+  ocean:    { bg: 'bg-[var(--color-note-ocean)]',    accent: '#60a5fa' },
+  forest:   { bg: 'bg-[var(--color-note-forest)]',   accent: '#4ade80' },
+  plum:     { bg: 'bg-[var(--color-note-plum)]',     accent: '#e879f9' },
+  wine:     { bg: 'bg-[var(--color-note-wine)]',     accent: '#fb7185' },
+  copper:   { bg: 'bg-[var(--color-note-copper)]',   accent: '#fb923c' },
+  midnight: { bg: 'bg-[var(--color-note-midnight)]', accent: '#38bdf8' },
+  emerald:  { bg: 'bg-[var(--color-note-emerald)]',  accent: '#34d399' },
+  gold:     { bg: 'bg-[var(--color-note-gold)]',     accent: '#facc15' },
+  violet:   { bg: 'bg-[var(--color-note-violet)]',   accent: '#c084fc' },
+  teal:     { bg: 'bg-[var(--color-note-teal)]',     accent: '#2dd4bf' },
+  slate:    { bg: 'bg-[var(--color-note-slate)]',    accent: '#a1a1aa' },
 }
 
 const MIN_W = 180
@@ -42,10 +42,10 @@ function hexToRgba(hex: string, alpha: number) {
 
 function buildShadow(accent: string, mode: 'rest' | 'selected' | 'editing' | 'dragging' | 'resizing') {
   const base =
-    '0 1px 2px rgba(0,0,0,0.05), 0 6px 14px -4px rgba(0,0,0,0.08), 0 16px 36px -12px rgba(0,0,0,0.10)'
+    '0 1px 2px rgba(0,0,0,0.20), 0 6px 14px -4px rgba(0,0,0,0.30), 0 16px 36px -12px rgba(0,0,0,0.40)'
   if (mode === 'rest') return base
   if (mode === 'dragging' || mode === 'resizing')
-    return `0 2px 4px rgba(0,0,0,0.08), 0 22px 50px -10px rgba(0,0,0,0.22), 0 32px 80px -20px ${hexToRgba(accent, 0.40)}`
+    return `0 2px 4px rgba(0,0,0,0.25), 0 22px 50px -10px rgba(0,0,0,0.35), 0 32px 80px -20px ${hexToRgba(accent, 0.40)}`
   if (mode === 'selected')
     return `${base}, 0 18px 40px -12px ${hexToRgba(accent, 0.35)}, 0 8px 24px -8px ${hexToRgba(accent, 0.25)}`
   return `${base}, 0 24px 60px -16px ${hexToRgba(accent, 0.55)}, 0 12px 36px -10px ${hexToRgba(accent, 0.40)}`
@@ -68,6 +68,7 @@ interface Props {
   /** Read at drop time. If true, the note is deleted instead of placed. */
   shouldDeleteOnDrop?: () => boolean
   onAutoFocused?: () => void
+  onEditingChange?: (editing: boolean) => void
   playSound: (s: SoundName) => void
 }
 
@@ -83,7 +84,7 @@ function NoteCard({
   note, scale, selected, autoFocus,
   onSelect, onChange, onDelete, onToggleKind,
   onDragStart, onDragEnd, shouldDeleteOnDrop,
-  onAutoFocused, playSound,
+  onAutoFocused, onEditingChange, playSound,
 }: Props) {
   const wrapperRef = useRef<HTMLDivElement>(null)
   const editorRef = useRef<HTMLDivElement>(null)
@@ -111,7 +112,7 @@ function NoteCard({
   const [dragging, setDragging] = useState(false)
   const [resizing, setResizing] = useState(false)
   const [isEmpty, setIsEmpty] = useState(() => isHtmlEmpty(note.body))
-  const tint = TINT[note.tint] ?? TINT.cream
+  const tint = TINT[note.tint] ?? TINT.onyx
   const isTodo = note.kind === 'todo'
 
   // Hydrate the editor DOM when the body changes from outside (storage, conversion).
@@ -198,11 +199,14 @@ function NoteCard({
     if (s.moved) {
       const deleting = shouldDeleteOnDrop?.() === true
       if (deleting) {
-        // Let exit animations run; useNotes removes the note immediately
         playSound('delete')
         onDelete()
       } else {
-        if (wrapperRef.current) wrapperRef.current.style.transform = ''
+        if (wrapperRef.current) {
+          wrapperRef.current.style.transform = ''
+          wrapperRef.current.style.left = `${s.finalX}px`
+          wrapperRef.current.style.top = `${s.finalY}px`
+        }
         onChange({ x: s.finalX, y: s.finalY })
         playSound('drop')
       }
@@ -266,6 +270,7 @@ function NoteCard({
     if (editing) return
     onSelect()
     setEditing(true)
+    onEditingChange?.(true)
     playSound('tapSoft')
   }
 
@@ -314,6 +319,15 @@ function NoteCard({
       ;(e.target as HTMLDivElement).blur()
       return
     }
+
+    // Delete empty note on Backspace/Delete
+    if ((e.key === 'Backspace' || e.key === 'Delete') && isEmpty && !isTodo) {
+      e.preventDefault()
+      onDelete()
+      playSound('delete')
+      return
+    }
+
     if (!(e.metaKey || e.ctrlKey)) return
     if (e.key === 'b' || e.key === 'B') { e.preventDefault(); exec('bold') }
     else if (e.key === 'i' || e.key === 'I') { e.preventDefault(); exec('italic') }
@@ -323,6 +337,7 @@ function NoteCard({
 
   const onEditorBlur = () => {
     setEditing(false)
+    onEditingChange?.(false)
     // Final sanitization pass so any pasted/exec garbage gets cleaned up before persist
     const el = editorRef.current
     if (!el) return
@@ -353,11 +368,22 @@ function NoteCard({
         height: note.h,
         zIndex: interacting ? 50 : editing ? 40 : selected ? 30 : 10,
         willChange: interacting ? 'transform, width, height' : 'auto',
+        touchAction: 'none',
       }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      onPointerCancel={handlePointerUp}
+      onPointerCancel={(e) => {
+          const s = dragState.current
+          if (s?.rafId) cancelAnimationFrame(s.rafId)
+          dragState.current = null
+          ;(e.currentTarget as HTMLElement).releasePointerCapture?.(e.pointerId)
+          if (s?.moved) {
+            if (wrapperRef.current) wrapperRef.current.style.transform = ''
+            onDragEnd()
+            setDragging(false)
+          }
+        }}
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.92, y: 8 }}

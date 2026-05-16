@@ -6,18 +6,18 @@ import type { NoteTint } from '../types'
 const EASE_OUT = [0.16, 1, 0.3, 1] as const
 
 const TINTS: { name: NoteTint; bg: string }[] = [
-  { name: 'cream',  bg: 'var(--color-note-cream)'  },
-  { name: 'banana', bg: 'var(--color-note-banana)' },
-  { name: 'sand',   bg: 'var(--color-note-sand)'   },
-  { name: 'coral',  bg: 'var(--color-note-coral)'  },
-  { name: 'rose',   bg: 'var(--color-note-rose)'   },
-  { name: 'blush',  bg: 'var(--color-note-blush)'  },
-  { name: 'lilac',  bg: 'var(--color-note-lilac)'  },
-  { name: 'sky',    bg: 'var(--color-note-sky)'    },
-  { name: 'aqua',   bg: 'var(--color-note-aqua)'   },
-  { name: 'mint',   bg: 'var(--color-note-mint)'   },
-  { name: 'sage',   bg: 'var(--color-note-sage)'   },
-  { name: 'slate',  bg: 'var(--color-note-slate)'  },
+  { name: 'onyx',     bg: 'var(--color-note-onyx)'     },
+  { name: 'ocean',    bg: 'var(--color-note-ocean)'    },
+  { name: 'forest',   bg: 'var(--color-note-forest)'   },
+  { name: 'plum',     bg: 'var(--color-note-plum)'     },
+  { name: 'wine',     bg: 'var(--color-note-wine)'     },
+  { name: 'copper',   bg: 'var(--color-note-copper)'   },
+  { name: 'midnight', bg: 'var(--color-note-midnight)' },
+  { name: 'emerald',  bg: 'var(--color-note-emerald)'  },
+  { name: 'gold',     bg: 'var(--color-note-gold)'     },
+  { name: 'violet',   bg: 'var(--color-note-violet)'   },
+  { name: 'teal',     bg: 'var(--color-note-teal)'     },
+  { name: 'slate',    bg: 'var(--color-note-slate)'    },
 ]
 
 interface Props {
@@ -139,8 +139,8 @@ export default function ColorPicker({ open, anchor, current, onSelect, onClose }
                 style={{
                   background: t.bg,
                   boxShadow: active
-                    ? '0 0 0 1.5px var(--color-ink-900), inset 0 1px 0 rgba(255,255,255,0.55)'
-                    : '0 0 0 0.5px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.5)',
+                    ? '0 0 0 1.5px var(--color-ink-900), inset 0 1px 0 rgba(255,255,255,0.04)'
+                    : '0 0 0 0.5px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.03)',
                 }}
               >
                 <AnimatePresence>
