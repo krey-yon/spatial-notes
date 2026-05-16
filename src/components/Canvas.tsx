@@ -12,11 +12,15 @@ const GRID_SIZE = 32
 
 export default function Canvas() {
   const surfaceRef = useRef<HTMLDivElement>(null)
-  const { notes, create, update, remove, bringToFront, toggleKind } = useNotes()
+  const {
+    notes, create, update, remove, bringToFront, toggleKind,
+    undo, redo, canUndo, canRedo,
+  } = useNotes()
   const { enabled: soundEnabled, trigger, toggle: toggleSound } = useSound()
   const { viewport, beginPan, updatePan, endPan, zoomBy, resetView } = usePanZoom({ targetRef: surfaceRef })
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
   const [overTrash, setOverTrash] = useState(false)
@@ -25,7 +29,6 @@ export default function Canvas() {
   const panActive = useRef(false)
 
   // While a note is being dragged, track pointer against the trash zone.
-  // Pointer capture on the Note pins all events to it, so we watch on window.
   useEffect(() => {
     if (!draggingId) {
       overTrashRef.current = false
@@ -102,6 +105,15 @@ export default function Canvas() {
         trigger('delete')
         remove(selectedId)
         setSelectedId(null)
+      } else if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'z') {
+        e.preventDefault()
+        if (undo()) trigger('tapSoft')
+      } else if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'z') {
+        e.preventDefault()
+        if (redo()) trigger('tapSoft')
+      } else if ((e.metaKey || e.ctrlKey) && e.key === 'y') {
+        e.preventDefault()
+        if (redo()) trigger('tapSoft')
       } else if ((e.metaKey || e.ctrlKey) && e.key === '0') {
         e.preventDefault()
         trigger('tapFirm')
@@ -128,7 +140,7 @@ export default function Canvas() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [selectedId, remove, resetView, zoomBy, create, viewport, trigger])
+  }, [selectedId, remove, undo, redo, resetView, zoomBy, create, viewport, trigger])
 
   const addCentered = useCallback(() => {
     const el = surfaceRef.current
@@ -140,12 +152,11 @@ export default function Canvas() {
     setAutoFocusId(note.id)
   }, [viewport, create])
 
-  // Pre-render an SVG dot grid that pans/zooms perfectly with the viewport.
   const gridStyle = useMemo<React.CSSProperties>(() => {
     const size = GRID_SIZE * viewport.scale
     return {
       backgroundImage:
-        'radial-gradient(circle, color-mix(in oklab, currentColor 8%, transparent) 1px, transparent 1px)',
+        'radial-gradient(circle, color-mix(in oklab, currentColor 6%, transparent) 1px, transparent 1px)',
       backgroundSize: `${size}px ${size}px`,
       backgroundPosition: `${viewport.x}px ${viewport.y}px`,
     }
@@ -154,9 +165,8 @@ export default function Canvas() {
   const transform = `translate3d(${viewport.x}px, ${viewport.y}px, 0) scale(${viewport.scale})`
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-white">
-      {/* Ambient aurora — gives the liquid-glass toolbar real material to refract.
-          Slow-drift gradient blob that sits roughly under the toolbar. */}
+    <div className="relative h-full w-full overflow-hidden bg-paper">
+      {/* Ambient aurora */}
       <motion.div
         aria-hidden
         initial={{ opacity: 0 }}
@@ -171,10 +181,10 @@ export default function Canvas() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background: [
-            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, var(--color-accent-sky) 14%, transparent), transparent 70%)',
-            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, var(--color-accent-lilac) 12%, transparent), transparent 70%)',
-            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, var(--color-accent-rose) 10%, transparent), transparent 70%)',
-            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, var(--color-accent-cream) 8%, transparent), transparent 75%)',
+            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, #60a5fa 12%, transparent), transparent 70%)',
+            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, #c084fc 10%, transparent), transparent 70%)',
+            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, #fb7185 8%, transparent), transparent 70%)',
+            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, #facc15 6%, transparent), transparent 75%)',
           ].join(', '),
           backgroundSize: '200% 200%',
         }}
@@ -194,7 +204,6 @@ export default function Canvas() {
         ].join(' ')}
         style={gridStyle}
       >
-        {/* World — everything inside transforms together */}
         <div
           className="absolute left-0 top-0"
           style={{
@@ -220,6 +229,7 @@ export default function Canvas() {
                 onDelete={() => {
                   remove(n.id)
                   setSelectedId(null)
+                  setEditingNoteId(null)
                 }}
                 onToggleKind={() => {
                   toggleKind(n.id)
@@ -227,6 +237,7 @@ export default function Canvas() {
                 }}
                 onDragStart={() => setDraggingId(n.id)}
                 onDragEnd={() => setDraggingId(null)}
+                onEditingChange={(editing) => setEditingNoteId(editing ? n.id : null)}
                 shouldDeleteOnDrop={shouldDeleteOnDrop}
                 playSound={trigger}
               />
@@ -234,7 +245,6 @@ export default function Canvas() {
           </AnimatePresence>
         </div>
 
-        {/* Empty state — shown only when there are no notes */}
         <AnimatePresence>
           {notes.length === 0 && (
             <motion.div
@@ -249,7 +259,6 @@ export default function Canvas() {
           )}
         </AnimatePresence>
 
-        {/* Drag shadow indicator — a hint that lift is happening */}
         {draggingId && (
           <div className="pointer-events-none absolute inset-0 z-20 bg-ink-950/[0.015]" />
         )}
@@ -260,11 +269,17 @@ export default function Canvas() {
         count={notes.length}
         soundEnabled={soundEnabled}
         dimmed={draggingId !== null}
+        hasSelection={selectedId !== null}
+        isEditing={editingNoteId !== null}
+        canUndo={canUndo}
+        canRedo={canRedo}
         onZoomIn={() => zoomBy(1.2)}
         onZoomOut={() => zoomBy(1 / 1.2)}
         onResetView={resetView}
         onAdd={addCentered}
         onToggleSound={toggleSound}
+        onUndo={undo}
+        onRedo={redo}
         playSound={trigger}
       />
 
