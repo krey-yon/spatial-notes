@@ -2,12 +2,65 @@
 
 @theme {
   --font-sans:
-    "Cabinet Grotesk", -apple-system, BlinkMacSystemFont, "SF Pro Display",
-    "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+    "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display",
+    system-ui, "Segoe UI", Roboto, sans-serif;
   --font-mono:
     "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
 
-  /* Apple-inspired neutral palette */
+  /* Dark-first ink scale (default) */
+  --color-ink-50: #18181f;
+  --color-ink-100: #22222c;
+  --color-ink-200: #2e2e3a;
+  --color-ink-300: #40404f;
+  --color-ink-400: #5a5a6e;
+  --color-ink-500: #78788c;
+  --color-ink-600: #9a9aad;
+  --color-ink-700: #b8b8c8;
+  --color-ink-800: #d4d4de;
+  --color-ink-900: #e8e8ec;
+  --color-ink-950: #f2f2f5;
+
+  --color-paper: #0b0b0f;
+
+  /* Jewel-toned note tints */
+  --color-note-onyx:     #1a1a24;
+  --color-note-ocean:    #151a2e;
+  --color-note-forest:   #152e1f;
+  --color-note-plum:     #2e1a2e;
+  --color-note-wine:     #2e1a1f;
+  --color-note-copper:   #2e2215;
+  --color-note-midnight: #12182e;
+  --color-note-emerald:  #152e24;
+  --color-note-gold:     #2e2a15;
+  --color-note-violet:   #22152e;
+  --color-note-teal:     #152a2e;
+  --color-note-slate:    #1e1e28;
+
+  /* Accents */
+  --color-accent-onyx:     #818cf8;
+  --color-accent-ocean:    #60a5fa;
+  --color-accent-forest:   #4ade80;
+  --color-accent-plum:     #e879f9;
+  --color-accent-wine:     #fb7185;
+  --color-accent-copper:   #fb923c;
+  --color-accent-midnight: #38bdf8;
+  --color-accent-emerald:  #34d399;
+  --color-accent-gold:     #facc15;
+  --color-accent-violet:   #c084fc;
+  --color-accent-teal:     #2dd4bf;
+  --color-accent-slate:    #a1a1aa;
+
+  --color-action: #c4b5fd;
+  --color-action-press: #a78bfa;
+
+  /* Easings */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Light theme overrides — html[data-theme="light"] beats :root specificity */
+html[data-theme="light"] {
   --color-ink-50: #fafafa;
   --color-ink-100: #f4f4f5;
   --color-ink-200: #e4e4e7;
@@ -20,52 +73,49 @@
   --color-ink-900: #18181b;
   --color-ink-950: #09090b;
 
-  --color-paper: #ffffff;
+  --color-paper: #f5f5f7;
 
-  /* Note body tints — Apple Stickies-grade saturation, dark-text-safe */
-  --color-note-cream:  #ffdf5c;  /* sticky yellow */
-  --color-note-banana: #fff09a;  /* soft yellow */
-  --color-note-sand:   #ffba7a;  /* warm peach */
-  --color-note-coral:  #ff9b80;  /* coral */
-  --color-note-rose:   #ffa8b8;  /* hot pink */
-  --color-note-blush:  #ffcedd;  /* light pink */
-  --color-note-lilac:  #c0a8ff;  /* lavender */
-  --color-note-sky:    #8ec9ff;  /* clear blue */
-  --color-note-aqua:   #95dfdc;  /* aqua/teal */
-  --color-note-mint:   #8de0a6;  /* spring green */
-  --color-note-sage:   #c0d8a8;  /* sage */
-  --color-note-slate:  #cdd2dc;  /* slate */
+  --color-note-onyx:     #e0e0f0;
+  --color-note-ocean:    #dbe4f0;
+  --color-note-forest:   #d4edda;
+  --color-note-plum:     #f0dbf0;
+  --color-note-wine:     #f0dbe0;
+  --color-note-copper:   #f0e4d4;
+  --color-note-midnight: #d4e4f0;
+  --color-note-emerald:  #d4f0e4;
+  --color-note-gold:     #f0ecd4;
+  --color-note-violet:   #e8d4f0;
+  --color-note-teal:     #d4f0ec;
+  --color-note-slate:    #e4e4e8;
 
-  /* Accent colors — for rings, focus glows, branding */
-  --color-accent-cream:  #f5b800;
-  --color-accent-banana: #e8c500;
-  --color-accent-sand:   #ff9500;
-  --color-accent-coral:  #ff6f4d;
-  --color-accent-rose:   #ff2d55;
-  --color-accent-blush:  #ff6d96;
-  --color-accent-lilac:  #af52de;
-  --color-accent-sky:    #007aff;
-  --color-accent-aqua:   #00b8b3;
-  --color-accent-mint:   #34c759;
-  --color-accent-sage:   #6fa45a;
-  --color-accent-slate:  #6f7986;
+  --color-accent-onyx:     #6366f1;
+  --color-accent-ocean:    #3b82f6;
+  --color-accent-forest:   #22c55e;
+  --color-accent-plum:     #d946ef;
+  --color-accent-wine:     #f43f5e;
+  --color-accent-copper:   #f97316;
+  --color-accent-midnight: #0ea5e9;
+  --color-accent-emerald:  #10b981;
+  --color-accent-gold:     #eab308;
+  --color-accent-violet:   #a855f7;
+  --color-accent-teal:     #14b8a6;
+  --color-accent-slate:    #71717a;
 
-  --color-action: #007aff;
-  --color-action-press: #0066d6;
-
-  /* Apple-style easings */
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --color-action: #6366f1;
+  --color-action-press: #4f46e5;
 }
 
 @layer base {
   :root {
-    color-scheme: light;
+    color-scheme: dark;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-synthesis: none;
+  }
+
+  html[data-theme="light"] {
+    color-scheme: light;
   }
 
   html, body, #root {
@@ -80,26 +130,24 @@
     font-family: var(--font-sans);
     color: var(--color-ink-900);
     background: var(--color-paper);
-    letter-spacing: -0.013em;
-    font-feature-settings: "ss01", "ss02", "cv01", "cv11";
+    letter-spacing: -0.01em;
+    font-feature-settings: "cv11", "ss01";
   }
 
   /* Selection */
-  ::selection { background: color-mix(in oklab, currentColor 18%, transparent); }
+  ::selection { background: color-mix(in oklab, currentColor 20%, transparent); }
 
-  /* Hairline scrollbars when they appear in editable areas */
+  /* Hairline scrollbars */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, currentColor 18%, transparent);
+    background: color-mix(in oklab, currentColor 20%, transparent);
     border-radius: 999px;
   }
   ::-webkit-scrollbar-track { background: transparent; }
 
-  /* Focus rings — we draw our own per component, never on contenteditable */
+  /* Focus rings */
   :focus { outline: none; }
-  :focus-visible {
-    outline: none;
-  }
+  :focus-visible { outline: none; }
   button:focus-visible {
     outline: 2px solid color-mix(in oklab, currentColor 30%, transparent);
     outline-offset: 2px;
@@ -114,15 +162,12 @@
 
   [contenteditable]:empty::before {
     content: attr(data-placeholder);
-    color: color-mix(in oklab, currentColor 35%, transparent);
+    color: color-mix(in oklab, currentColor 30%, transparent);
     pointer-events: none;
   }
 
-  /* iOS Safari adds a tap highlight on contenteditable — kill it */
   * { -webkit-tap-highlight-color: transparent; }
 
-  /* Default cursor for anything that's actually clickable. Browsers stopped
-     doing this for <button> a few years back, so we put it back. */
   button:not(:disabled),
   [role="button"]:not(:disabled),
   summary {
@@ -134,70 +179,63 @@
 }
 
 @layer utilities {
-  /* Subtle paper grain — barely visible, helps depth */
+  /* Subtle paper grain */
   .bg-grain {
     background-image:
       radial-gradient(
         circle at 1px 1px,
-        color-mix(in oklab, currentColor 4%, transparent) 1px,
+        color-mix(in oklab, currentColor 3%, transparent) 1px,
         transparent 0
       );
     background-size: 24px 24px;
   }
 
-  /* Liquid glass — a frosted slab that refracts whatever sits behind it.
-     Tuned so the material reads even over a near-white canvas:
-       - Lower base opacity so blurred color shows through
-       - High saturation boost so any tint behind feels vivid
-       - Strong inner top highlight + faint inner bottom shadow = depth
-       - Outer hairline ring + diffuse ambient = it sits in space */
+  /* Dark liquid glass (adapts via CSS vars) */
   .glass {
     background:
       linear-gradient(
         180deg,
-        rgba(255, 255, 255, 0.55) 0%,
-        rgba(255, 255, 255, 0.35) 50%,
-        rgba(255, 255, 255, 0.40) 100%
+        color-mix(in oklab, var(--color-paper) 65%, transparent) 0%,
+        color-mix(in oklab, var(--color-paper) 45%, transparent) 50%,
+        color-mix(in oklab, var(--color-paper) 50%, transparent) 100%
       );
-    backdrop-filter: saturate(220%) blur(32px);
-    -webkit-backdrop-filter: saturate(220%) blur(32px);
+    backdrop-filter: saturate(200%) blur(28px);
+    -webkit-backdrop-filter: saturate(200%) blur(28px);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.95),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.55),
-      inset 0 -1px 1px rgba(0, 0, 0, 0.04),
-      0 0 0 0.5px rgba(0, 0, 0, 0.06),
-      0 6px 14px -4px rgba(0, 0, 0, 0.08),
-      0 22px 48px -12px rgba(0, 0, 0, 0.20);
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.04),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.10),
+      0 0 0 0.5px rgba(255, 255, 255, 0.04),
+      0 6px 14px -4px rgba(0, 0, 0, 0.30),
+      0 22px 48px -12px rgba(0, 0, 0, 0.40);
   }
 
-  /* Glass button — same material at button scale. The inset highlight
-     reinforces the sense that each pill is its own piece of glass. */
   .glass-btn {
-    background: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.04);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.9),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      inset 0 0 0 0.5px rgba(255, 255, 255, 0.03),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.08);
     transition: background 180ms ease;
   }
   .glass-btn:hover {
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.10);
   }
   .glass-btn:active {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.02);
   }
 
   .shadow-soft {
     box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.05),
-      0 6px 14px -4px rgba(0, 0, 0, 0.08),
-      0 16px 36px -12px rgba(0, 0, 0, 0.10);
+      0 1px 2px rgba(0, 0, 0, 0.20),
+      0 6px 14px -4px rgba(0, 0, 0, 0.30),
+      0 16px 36px -12px rgba(0, 0, 0, 0.40);
   }
   .shadow-lift {
     box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.06),
-      0 12px 28px -8px rgba(0, 0, 0, 0.10),
-      0 28px 60px -16px rgba(0, 0, 0, 0.20);
+      0 2px 4px rgba(0, 0, 0, 0.25),
+      0 12px 28px -8px rgba(0, 0, 0, 0.30),
+      0 28px 60px -16px rgba(0, 0, 0, 0.45);
   }
 
   .text-balance { text-wrap: balance; }
@@ -208,15 +246,11 @@
     -webkit-user-select: none;
   }
 
-  /* Rich text body inside notes — keep typography tight inside the small
-     sticky shape. Lists indent enough to look intentional but stay narrow. */
   .rich-body {
     min-height: 1.5em;
   }
   .rich-body b,
   .rich-body strong { font-weight: 700; }
-  /* Cabinet Grotesk doesn't ship an italic face — explicitly allow the
-     browser to synthesize one so <em>/<i> actually slant. */
   .rich-body i,
   .rich-body em {
     font-style: italic;
