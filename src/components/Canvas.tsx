@@ -1,32 +1,55 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import NoteCard from './Note'
-import Toolbar from './Toolbar'
+import Toolbar, { type CursorMode } from './Toolbar'
 import EmptyState from './EmptyState'
 import TrashZone from './TrashZone'
+import Tour from './Tour'
 import { useNotes } from '../hooks/useNotes'
 import { useSound } from '../hooks/useSound'
+import { useTour } from '../hooks/useTour'
 import { screenToWorld, usePanZoom } from '../hooks/usePanZoom'
 
 const GRID_SIZE = 32
 
-export default function Canvas() {
+interface CanvasProps {
+  creditsOpen?: boolean
+  creditsSeen?: boolean
+}
+
+export default function Canvas({ creditsOpen = false, creditsSeen = true }: CanvasProps) {
   const surfaceRef = useRef<HTMLDivElement>(null)
   const {
     notes, create, update, remove, bringToFront, toggleKind,
-    undo, redo, canUndo, canRedo,
+    undo, redo,
   } = useNotes()
   const { enabled: soundEnabled, trigger, toggle: toggleSound } = useSound()
   const { viewport, beginPan, updatePan, endPan, zoomBy, resetView } = usePanZoom({ targetRef: surfaceRef })
+  const { active: tourActive, step: tourStep, start: startTour, next: nextTourStep, finish: finishTour } = useTour({ canStart: creditsSeen || !creditsOpen })
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null)
   const [draggingId, setDraggingId] = useState<string | null>(null)
   const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
   const [overTrash, setOverTrash] = useState(false)
+  const [cursorMode, setCursorMode] = useState<CursorMode>('hand')
+  const [marquee, setMarquee] = useState<{
+    sx: number; sy: number
+    ex: number; ey: number
+    additive: boolean
+  } | null>(null)
   const overTrashRef = useRef(false)
   const trashRef = useRef<HTMLDivElement>(null)
   const panActive = useRef(false)
+  // Refs that the marquee pointerup handler reads so it can stay in sync
+  // without re-binding on every selection/viewport change.
+  const notesRef = useRef(notes)
+  notesRef.current = notes
+  const viewportRef = useRef(viewport)
+  viewportRef.current = viewport
+  const selectedIdsRef = useRef(selectedIds)
+  selectedIdsRef.current = selectedIds
 
   // While a note is being dragged, track pointer against the trash zone.
   useEffect(() => {
@@ -64,24 +87,80 @@ export default function Canvas() {
   // Background pan with pointer
   const onSurfacePointerDown = useCallback((e: React.PointerEvent) => {
     if (e.target !== surfaceRef.current && !(e.target as HTMLElement).hasAttribute('data-surface')) return
+    if (cursorMode === 'select') {
+      // Marquee: in select mode, click+drag the empty surface to box-select.
+      // Shift = additive (extend existing selection), no shift = replace.
+      const additive = e.shiftKey || e.metaKey || e.ctrlKey
+      if (!additive) {
+        setSelectedId(null)
+        setSelectedIds(new Set())
+      }
+      setMarquee({ sx: e.clientX, sy: e.clientY, ex: e.clientX, ey: e.clientY, additive })
+      surfaceRef.current?.setPointerCapture(e.pointerId)
+      return
+    }
     panActive.current = true
     setSelectedId(null)
     beginPan(e.clientX, e.clientY)
     surfaceRef.current?.setPointerCapture(e.pointerId)
-  }, [beginPan])
+  }, [beginPan, cursorMode])
 
   const onSurfacePointerMove = useCallback((e: React.PointerEvent) => {
+    if (marquee) {
+      setMarquee((m) => (m ? { ...m, ex: e.clientX, ey: e.clientY } : m))
+      return
+    }
     if (!panActive.current) return
     updatePan(e.clientX, e.clientY)
-  }, [updatePan])
+  }, [marquee, updatePan])
 
   const onSurfacePointerUp = useCallback((e: React.PointerEvent) => {
+    if (marquee) {
+      // Compute final selection from the marquee rect, in world space.
+      const surface = surfaceRef.current
+      if (surface) {
+        const rect = surface.getBoundingClientRect()
+        const v = viewportRef.current
+        const x1 = marquee.sx - rect.left
+        const y1 = marquee.sy - rect.top
+        const x2 = marquee.ex - rect.left
+        const y2 = marquee.ey - rect.top
+        const a = screenToWorld(v, Math.min(x1, x2), Math.min(y1, y2))
+        const b = screenToWorld(v, Math.max(x1, x2), Math.max(y1, y2))
+        const minX = a.x, minY = a.y, maxX = b.x, maxY = b.y
+        // A "real" marquee needs some travel. Sub-4px is a stray click — treat
+        // as a deselect for non-additive, no-op for additive.
+        const traveled = Math.hypot(marquee.ex - marquee.sx, marquee.ey - marquee.sy)
+        if (traveled >= 4) {
+          const hit = new Set(marquee.additive ? selectedIdsRef.current : [])
+          for (const n of notesRef.current) {
+            const nx2 = n.x + n.w
+            const ny2 = n.y + n.h
+            if (n.x < maxX && nx2 > minX && n.y < maxY && ny2 > minY) {
+              hit.add(n.id)
+            }
+          }
+          setSelectedIds(hit)
+          if (hit.size === 1) setSelectedId([...hit][0]!)
+        } else if (!marquee.additive) {
+          setSelectedIds(new Set())
+        }
+      }
+      setMarquee(null)
+      surfaceRef.current?.releasePointerCapture?.(e.pointerId)
+      return
+    }
     if (panActive.current) {
       panActive.current = false
       endPan()
       surfaceRef.current?.releasePointerCapture?.(e.pointerId)
     }
-  }, [endPan])
+  }, [marquee, endPan])
+
+  const toggleCursorMode = useCallback(() => {
+    setCursorMode((m) => (m === 'hand' ? 'select' : 'hand'))
+    setMarquee(null)
+  }, [])
 
   const onSurfaceDoubleClick = useCallback((e: React.MouseEvent) => {
     if (e.target !== surfaceRef.current && !(e.target as HTMLElement).hasAttribute('data-surface')) return
@@ -100,10 +179,25 @@ export default function Canvas() {
       const isEditing = tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable
       if (isEditing) return
 
-      if ((e.key === 'Backspace' || e.key === 'Delete') && selectedId) {
+      const hasSelection = selectedId !== null || selectedIds.size > 0
+      if ((e.key === 'Backspace' || e.key === 'Delete') && hasSelection) {
         e.preventDefault()
         trigger('delete')
-        remove(selectedId)
+        // Delete multi-selected first, then any primary selected that wasn't
+        // already in the multi set.
+        const ids = new Set(selectedIds)
+        if (selectedId) ids.add(selectedId)
+        for (const id of ids) remove(id)
+        setSelectedIds(new Set())
+        setSelectedId(null)
+      } else if ((e.key === 'Escape') && (selectedId || selectedIds.size > 0 || marquee)) {
+        e.preventDefault()
+        setSelectedIds(new Set())
+        setSelectedId(null)
+        setMarquee(null)
+      } else if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'a') {
+        e.preventDefault()
+        setSelectedIds(new Set(notes.map((n) => n.id)))
         setSelectedId(null)
       } else if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key === 'z') {
         e.preventDefault()
@@ -140,7 +234,7 @@ export default function Canvas() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [selectedId, remove, undo, redo, resetView, zoomBy, create, viewport, trigger])
+  }, [selectedId, selectedIds, notes, remove, undo, redo, resetView, zoomBy, create, viewport, trigger, marquee])
 
   const addCentered = useCallback(() => {
     const el = surfaceRef.current
@@ -181,10 +275,10 @@ export default function Canvas() {
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background: [
-            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, #60a5fa 12%, transparent), transparent 70%)',
-            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, #c084fc 10%, transparent), transparent 70%)',
-            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, #fb7185 8%, transparent), transparent 70%)',
-            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, #facc15 6%, transparent), transparent 75%)',
+            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, var(--color-accent-ocean) 12%, transparent), transparent 70%)',
+            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, var(--color-accent-violet) 10%, transparent), transparent 70%)',
+            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, var(--color-accent-wine) 8%, transparent), transparent 70%)',
+            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, var(--color-accent-gold) 6%, transparent), transparent 75%)',
           ].join(', '),
           backgroundSize: '200% 200%',
         }}
@@ -200,7 +294,11 @@ export default function Canvas() {
         onDoubleClick={onSurfaceDoubleClick}
         className={[
           'absolute inset-0 z-10 text-ink-900',
-          panActive.current ? 'cursor-grabbing' : 'cursor-grab',
+          cursorMode === 'select'
+            ? 'cursor-default'
+            : panActive.current
+              ? 'cursor-grabbing'
+              : 'cursor-grab',
         ].join(' ')}
         style={gridStyle}
       >
@@ -218,11 +316,12 @@ export default function Canvas() {
                 key={n.id}
                 note={n}
                 scale={viewport.scale}
-                selected={selectedId === n.id}
+                selected={selectedId === n.id || selectedIds.has(n.id)}
                 autoFocus={autoFocusId === n.id}
                 onAutoFocused={() => setAutoFocusId(null)}
                 onSelect={() => {
                   setSelectedId(n.id)
+                  setSelectedIds(new Set())
                   bringToFront(n.id)
                 }}
                 onChange={(patch) => update(n.id, patch)}
@@ -244,6 +343,24 @@ export default function Canvas() {
             ))}
           </AnimatePresence>
         </div>
+
+        {/* Marquee rectangle, in screen space so it tracks the cursor
+            without panning with the canvas. */}
+        {marquee && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute z-20"
+            style={{
+              left: Math.min(marquee.sx, marquee.ex) - surfaceRef.current!.getBoundingClientRect().left,
+              top: Math.min(marquee.sy, marquee.ey) - surfaceRef.current!.getBoundingClientRect().top,
+              width: Math.abs(marquee.ex - marquee.sx),
+              height: Math.abs(marquee.ey - marquee.sy),
+              background: 'color-mix(in oklab, var(--color-action) 8%, transparent)',
+              border: '1px solid color-mix(in oklab, var(--color-action) 60%, transparent)',
+              borderRadius: '4px',
+            }}
+          />
+        )}
 
         <AnimatePresence>
           {notes.length === 0 && (
@@ -268,22 +385,33 @@ export default function Canvas() {
         scale={viewport.scale}
         count={notes.length}
         soundEnabled={soundEnabled}
+        cursorMode={cursorMode}
         dimmed={draggingId !== null}
-        hasSelection={selectedId !== null}
+        hasSelection={selectedId !== null || selectedIds.size > 0}
         isEditing={editingNoteId !== null}
-        canUndo={canUndo}
-        canRedo={canRedo}
         onZoomIn={() => zoomBy(1.2)}
         onZoomOut={() => zoomBy(1 / 1.2)}
         onResetView={resetView}
         onAdd={addCentered}
         onToggleSound={toggleSound}
-        onUndo={undo}
-        onRedo={redo}
+        onToggleCursorMode={toggleCursorMode}
+        onReplayTour={startTour}
         playSound={trigger}
       />
 
       <TrashZone ref={trashRef} visible={draggingId !== null} active={overTrash} />
+
+      <Tour
+        active={tourActive}
+        step={tourStep}
+        notes={notes}
+        onNext={nextTourStep}
+        onFinish={finishTour}
+        onSelectNote={(id) => {
+          setSelectedId(id)
+          bringToFront(id)
+        }}
+      />
     </div>
   )
 }
