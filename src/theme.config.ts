@@ -178,8 +178,6 @@ export const typography = {
     emptyHeadline: '40px', emptySubtitle: '11px',
     modalTitle: '26px', modalBody: '14.5px', modalButton: '14px', modalClose: '13px', modalDate: '10px',
     modalFeatureTitle: '13.5px', modalFeatureDesc: '12.5px', modalHeroTitle: '20px', modalHeroSubtitle: '13px',
-    changelogDate: '10px', changelogTitle: '20px', changelogSubtitle: '13px',
-    changelogFeatureTitle: '13.5px', changelogFeatureDesc: '12.5px', changelogButton: '13px',
     trashLabel: '12.5px',
     mobileBrand: '15px', mobilePhonetic: '10px', mobileHeadline: '34px',
     mobileBody: '15px', mobileAsk: '10.5px', mobileMadeBy: '11px',
@@ -189,19 +187,16 @@ export const typography = {
     brandName: '-0.018em', noteBody: '-0.005em', noteTimestamp: '-0.005em',
     toolbarZoom: '-0.005em', emptyHeadline: '-0.035em', emptySubtitle: '0.16em',
     modalTitle: '-0.025em', modalBody: '-0.008em', modalButton: '-0.01em',
-    changelogTitle: '-0.022em', changelogSubtitle: '-0.005em',
-    changelogFeatureTitle: '-0.012em', changelogFeatureDesc: '-0.003em',
     mobileHeadline: '-0.025em', mobileBody: '-0.005em', mobileAsk: '0.12em',
     trashLabel: '-0.01em', signature: '-0.005em', devSignatureName: '-0.012em',
   },
   lineHeight: {
     noteBody: 1.5, modalTitle: 1.05, modalBody: 1.55, modalFeatureDesc: 1.4,
-    changelogTitle: 1.1, changelogSubtitle: 1.45, changelogFeatureDesc: 1.4,
     mobileHeadline: 1.05, mobileBody: 1.5,
   },
   case: {
     noteTimestamp: 'uppercase' as const, emptySubtitle: 'uppercase' as const,
-    mobileAsk: 'uppercase' as const, changelogDate: 'uppercase' as const,
+    mobileAsk: 'uppercase' as const,
   },
 } as const
 
@@ -254,9 +249,9 @@ export const spacing = {
     checkmarkSize: 10,
   },
   modal: {
-    creditsWidth: 380, changelogWidth: 360,
+    creditsWidth: 380,
     maxViewportPct: '92vw',
-    creditsRadius: '16px', changelogRadius: '8px',
+    creditsRadius: '16px',
     popupRadius: '8px', buttonRadius: '999px',
     paddingX: '1.75rem', paddingTop: '2.25rem', paddingBottom: '1.5rem',
     tapeWidth: '5rem', tapeHeight: '1.25rem',
@@ -279,7 +274,7 @@ export const spacing = {
     noteSelected: 30, noteEditing: 40, noteDragging: 50,
     dragShadow: 20, emptyState: 0,
     toolbar: 50, trashZone: 50,
-    devSignature: 40, changelogTrigger: 40,
+    devSignature: 40,
     selectionToolbar: 100, colorPicker: 100,
     modalBackdrop: 200, modalCard: 200,
   },
@@ -301,7 +296,6 @@ export const radius = {
   kbd: '5px',
   modalButton: '999px',
   creditsCard: '16px',
-  changelogCard: '8px',
   modalCloseButton: '6px',
   featureIcon: '6px',
   brandIcon: '8px',
@@ -337,17 +331,6 @@ export const shadows = {
       'inset 0 1px 0 rgba(255,255,255,0.06), ' +
       'inset 0 0 0 0.5px rgba(255,255,255,0.03), ' +
       'inset 0 -1px 0 rgba(0,0,0,0.08)',
-    changelogTrigger:
-      'inset 0 1px 0 rgba(255,255,255,0.08), ' +
-      'inset 0 0 0 0.5px rgba(255,255,255,0.04), ' +
-      '0 0 0 0.5px rgba(255,255,255,0.04), ' +
-      '0 6px 14px -4px rgba(0,0,0,0.25), ' +
-      '0 14px 32px -10px rgba(0,0,0,0.35)',
-    changelogPopup:
-      '0 1px 0 rgba(255,255,255,0.04) inset, ' +
-      '0 0 0 0.5px rgba(255,255,255,0.06), ' +
-      '0 14px 30px -8px rgba(0,0,0,0.35), ' +
-      '0 28px 64px -12px rgba(0,0,0,0.45)',
   },
   soft: '0 1px 2px rgba(0,0,0,0.20), 0 6px 14px -4px rgba(0,0,0,0.30), 0 16px 36px -12px rgba(0,0,0,0.40)',
   lift: '0 2px 4px rgba(0,0,0,0.25), 0 12px 28px -8px rgba(0,0,0,0.30), 0 28px 60px -16px rgba(0,0,0,0.45)',
@@ -469,7 +452,6 @@ export const motion = {
     colorPicker: { type: 'spring' as const, stiffness: 460, damping: 30, mass: 0.7 },
     swatch: { type: 'spring' as const, stiffness: 520, damping: 22 },
     sticky: { type: 'spring' as const, stiffness: 280, damping: 16, mass: 0.9 },
-    changelog: { type: 'spring' as const, stiffness: 340, damping: 30, mass: 0.8 },
     credits: { type: 'spring' as const, stiffness: 320, damping: 26, mass: 0.8 },
     item: { type: 'spring' as const, stiffness: 360, damping: 30 },
     heroDot: { type: 'spring' as const, stiffness: 480, damping: 18 },
@@ -487,15 +469,14 @@ export const motion = {
   },
   stagger: {
     emptyLetter: 0.025, colorSwatch: 0.022,
-    changelogItem: 0.06, heroDot: 0.05,
+    heroDot: 0.05,
     creditsItem: 0.08, mobileSticky: 0.08,
   },
   delay: {
     brand: 0.1, toolbar: 0.18, hint: 0.6,
-    emptySubtitle: 0.45, changelogChildren: 0.14,
-    changelogHeroDots: 0.04, creditsChildren: 0.14,
+    emptySubtitle: 0.45, creditsChildren: 0.14,
     creditsWave: 0.25, mobileText: 0.1,
-    signature: 1.1, changelogTrigger: 0.6,
+    signature: 1.1,
     newBadge: 0.8, mobileStickyBase: 0.1,
   },
   ambient: {
@@ -535,7 +516,6 @@ export const motion = {
     toolbarEnterY: 16, toolbarDimmedY: 14,
     trashEnterY: 28, brandEnterY: -8,
     emptySubtitleY: 4, selectionToolbarY: 4,
-    changelogEnterY: 28, changelogExitY: 20,
     creditsEnterY: 14, creditsExitY: 10,
     mobileTextY: 14, mobileStickyY: -60,
     signatureEnterY: 18, signatureEnterRotate: -3.5,
@@ -703,40 +683,6 @@ export const components = {
     },
     label: 'A small ask', madeBy: 'made by',
   },
-  changelog: {
-    storageKey: 'spatial-notes:changelog:v2',
-    appearDelayMs: 30_000,
-    releaseDate: 'May 15, 2026',
-    heroDots: [
-      'var(--color-note-gold)',
-      'var(--color-note-copper)',
-      'var(--color-note-violet)',
-      'var(--color-note-teal)',
-      'var(--color-note-emerald)',
-    ],
-    features: [
-      {
-        title: 'Rich formatting',
-        desc: 'Bold, italic, bullets — select text or hit ⌘B / ⌘I.',
-        tint: 'var(--color-note-gold)', accent: 'var(--color-accent-gold)',
-      },
-      {
-        title: 'Notes ↔ to-dos',
-        desc: 'Flip any note into a checkable list, then back again.',
-        tint: 'var(--color-note-emerald)', accent: 'var(--color-accent-emerald)',
-      },
-      {
-        title: 'Drag to trash',
-        desc: 'Pick up a note and drop it on the bottom zone to delete.',
-        tint: 'var(--color-note-wine)', accent: 'var(--color-accent-wine)',
-      },
-      {
-        title: 'A dozen colors',
-        desc: 'Twelve tints — tap the palette on any note to recolor.',
-        tint: 'var(--color-note-midnight)', accent: 'var(--color-accent-midnight)',
-      },
-    ],
-  },
   credits: {
     storageKey: 'spatial-notes:credits:v1',
     appearDelayMs: 1_800,
@@ -767,7 +713,6 @@ export const storage = {
   notes: 'spatial-notes:notes:v1',
   sound: 'spatial-notes:sound',
   theme: 'spatial-notes:theme',
-  changelog: 'spatial-notes:changelog:v2',
   credits: 'spatial-notes:credits:v1',
 } as const
 
