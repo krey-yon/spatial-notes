@@ -12,12 +12,9 @@ import { screenToWorld, usePanZoom } from '../hooks/usePanZoom'
 
 const GRID_SIZE = 32
 
-interface CanvasProps {
-  creditsOpen?: boolean
-  creditsSeen?: boolean
-}
+interface CanvasProps {}
 
-export default function Canvas({ creditsOpen = false, creditsSeen = true }: CanvasProps) {
+export default function Canvas({}: CanvasProps = {}) {
   const surfaceRef = useRef<HTMLDivElement>(null)
   const {
     notes, create, update, remove, bringToFront, toggleKind,
@@ -25,7 +22,7 @@ export default function Canvas({ creditsOpen = false, creditsSeen = true }: Canv
   } = useNotes()
   const { enabled: soundEnabled, trigger, toggle: toggleSound } = useSound()
   const { viewport, beginPan, updatePan, endPan, zoomBy, resetView } = usePanZoom({ targetRef: surfaceRef })
-  const { active: tourActive, step: tourStep, start: startTour, next: nextTourStep, finish: finishTour } = useTour({ canStart: creditsSeen || !creditsOpen })
+  const { active: tourActive, step: tourStep, start: startTour, next: nextTourStep, finish: finishTour } = useTour({ canStart: true })
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set())
