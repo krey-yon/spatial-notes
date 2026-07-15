@@ -13,9 +13,9 @@
 // =============================================================================
 
 export const brand = {
-  name: 'inklin',
-  phonetic: '/ˈɪŋklɪn/',
-  description: 'inklin /ˈɪŋklɪn/ — a spatial canvas for notes, lists, and half-formed ideas.',
+  name: 'notes',
+  phonetic: '',
+  description: 'notes — a spatial canvas for notes, lists, and half-formed ideas.',
   titleSuffix: 'a quiet canvas for thinking',
   author: 'Ayomide Aluko',
   authorUrl: 'https://x.com/ayomicoder',
@@ -658,12 +658,12 @@ export const components = {
   },
   emptyState: {
     phrases: [
-      'Welcome to inklin.',
+      'Welcome to notes.',
       'A quiet canvas.',
       'Room for your thoughts.',
       'Drop your ideas.',
       'Make something.',
-      'inklin awaits.',
+      'notes awaits.',
     ],
     subtitle: 'Double-click anywhere',
     letterStagger: 0.025,
@@ -682,22 +682,6 @@ export const components = {
       after: " and it'll be right here — full size, full breath.",
     },
     label: 'A small ask', madeBy: 'made by',
-  },
-  credits: {
-    storageKey: 'spatial-notes:credits:v1',
-    appearDelayMs: 1_800,
-    wavePattern: [0, 14, -8, 14, -4, 10, 0] as const,
-    waveDuration: 1.4,
-    title: 'Hey there',
-    emoji: '👋',
-    body: {
-      p1: "I'm ", p1Highlight: 'Ayomide Aluko',
-      p1Mid: " — the human behind the pixels. I built ",
-      p1App: 'inklin', p1After: " for my own scattered brain, and quietly hoped it might help someone else's too.",
-      p2: 'If it brings you a small bit of calm today, say hi.',
-    },
-    cta: 'Find me on X', close: 'Close',
-    linkDecoration: 'var(--color-accent-onyx)',
   },
   signature: { prefix: 'by', name: 'Ayomide Aluko', arrowSize: 10 },
   trash: {

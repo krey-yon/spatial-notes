@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 
 const PHRASES = [
-  'Welcome to inklin.',
+  'Welcome to notes.',
   'A clean canvas.',
   'Space for thinking.',
   'Drop your thoughts.',
   'Make something.',
-  'inklin awaits.',
+  'notes awaits.',
 ] as const
 
 const ROTATE_MS = 3600

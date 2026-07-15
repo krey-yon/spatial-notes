@@ -57,7 +57,7 @@ function snap(notes: Note[], tourNoteId: string | null): Snap {
 const STEPS: StepDef[] = [
   {
     id: 'welcome',
-    title: 'Welcome to inklin',
+    title: 'Welcome to notes',
     body: 'A tiny canvas for fast-moving thoughts. Five quick steps and you’re set.',
   },
   {

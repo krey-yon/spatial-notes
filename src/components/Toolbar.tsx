@@ -48,10 +48,7 @@ const Brand = memo(function Brand({ count }: { count: number }) {
       <div className="leading-none">
         <div className="flex items-baseline gap-1.5">
           <span className="text-[14px] font-semibold tracking-[-0.018em] lowercase text-ink-900">
-            inklin
-          </span>
-          <span className="font-mono text-[9.5px] tracking-tight text-ink-400">
-            /ˈɪŋklɪn/
+            notes
           </span>
         </div>
         <div className="mt-1 font-mono text-[10px] tracking-tight uppercase text-ink-500">

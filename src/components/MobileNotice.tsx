@@ -95,10 +95,7 @@ export default function MobileNotice() {
           className="mb-6 flex items-baseline gap-1.5"
         >
           <span className="text-[15px] font-semibold tracking-[-0.018em] lowercase text-ink-900">
-            inklin
-          </span>
-          <span className="font-mono text-[10px] tracking-tight text-ink-400">
-            /ˈɪŋklɪn/
+            notes
           </span>
         </motion.div>
 
@@ -159,20 +156,6 @@ export default function MobileNotice() {
           and it'll be right here — full size, full breath.
         </motion.p>
 
-        <motion.div
-          variants={textVariants}
-          className="mt-10 flex items-center gap-2 font-mono text-[11px] text-ink-400"
-        >
-          <span>made by</span>
-          <a
-            href="https://x.com/ayomicoder"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-ink-700 underline decoration-ink-300 underline-offset-[3px] hover:decoration-ink-700 transition-colors"
-          >
-            Ayomide Aluko
-          </a>
-        </motion.div>
       </motion.div>
     </div>
   )

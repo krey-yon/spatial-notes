@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const STORAGE_KEY = 'inklin:tour:v1'
+const STORAGE_KEY = 'notes:tour:v1'
 
 interface Options {
   /** Gate the first-run auto-start. Pass `false` while another piece of UI
