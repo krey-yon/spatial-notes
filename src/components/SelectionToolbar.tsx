@@ -180,7 +180,7 @@ function ToolBtn({
       className={[
         'grid h-7 w-7 place-items-center rounded-full transition-colors',
         active
-          ? 'bg-ink-900 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
+          ? 'bg-ink-900 text-paper shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
           : 'text-ink-700 hover:text-ink-900 hover:bg-black/[0.06]',
       ].join(' ')}
     >

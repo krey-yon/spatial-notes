@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Make Tailwind's `dark:` variant track the app's data-theme toggle (not the
+   OS preference). The app's default theme is dark, and `data-theme="light"`
+   is the only override. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, :not([data-theme="light"]), :not([data-theme="light"]) *));
+
 @theme {
   --font-sans:
     "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display",
@@ -190,7 +195,9 @@ html[data-theme="light"] {
     background-size: 24px 24px;
   }
 
-  /* Dark liquid glass (adapts via CSS vars) */
+  /* Glass surface — adapts to theme via CSS vars. Inner highlights use
+     currentColor so they read as a lighter edge in dark mode and a darker
+     edge in light mode. */
   .glass {
     background:
       linear-gradient(
@@ -202,27 +209,27 @@ html[data-theme="light"] {
     backdrop-filter: saturate(200%) blur(28px);
     -webkit-backdrop-filter: saturate(200%) blur(28px);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.04),
+      inset 0 1px 0 color-mix(in oklab, currentColor 8%, transparent),
+      inset 0 0 0 0.5px color-mix(in oklab, currentColor 4%, transparent),
       inset 0 -1px 1px rgba(0, 0, 0, 0.10),
-      0 0 0 0.5px rgba(255, 255, 255, 0.04),
+      0 0 0 0.5px color-mix(in oklab, currentColor 4%, transparent),
       0 6px 14px -4px rgba(0, 0, 0, 0.30),
       0 22px 48px -12px rgba(0, 0, 0, 0.40);
   }
 
   .glass-btn {
-    background: rgba(255, 255, 255, 0.04);
+    background: color-mix(in oklab, currentColor 4%, transparent);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      inset 0 0 0 0.5px rgba(255, 255, 255, 0.03),
+      inset 0 1px 0 color-mix(in oklab, currentColor 6%, transparent),
+      inset 0 0 0 0.5px color-mix(in oklab, currentColor 3%, transparent),
       inset 0 -1px 0 rgba(0, 0, 0, 0.08);
     transition: background 180ms ease;
   }
   .glass-btn:hover {
-    background: rgba(255, 255, 255, 0.10);
+    background: color-mix(in oklab, currentColor 10%, transparent);
   }
   .glass-btn:active {
-    background: rgba(255, 255, 255, 0.02);
+    background: color-mix(in oklab, currentColor 2%, transparent);
   }
 
   .shadow-soft {

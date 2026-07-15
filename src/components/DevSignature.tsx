@@ -22,7 +22,7 @@ export default function DevSignature() {
       className="group fixed bottom-5 right-5 z-40 flex items-center gap-1.5 select-none"
       style={{
         // A real little Post-it: tinted bg, soft drop shadow, micro tape strip
-        background: 'var(--color-note-blush)',
+        background: 'var(--color-note-wine)',
         color: 'var(--color-ink-900)',
         padding: '7px 11px 7px 12px',
         borderRadius: '6px',
@@ -32,7 +32,7 @@ export default function DevSignature() {
         boxShadow:
           '0 1px 2px rgba(0,0,0,0.05), ' +
           '0 6px 14px -4px rgba(0,0,0,0.10), ' +
-          '0 12px 28px -10px rgba(255,109,150,0.32), ' +
+          '0 12px 28px -10px color-mix(in oklab, var(--color-accent-wine) 50%, transparent), ' +
           'inset 0 1px 0 rgba(255,255,255,0.5)',
         transformOrigin: '90% 100%',
         textDecoration: 'none',

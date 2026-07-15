@@ -54,7 +54,11 @@ const waveVariants: Variants = {
   },
 }
 
-export default function CreditsModal() {
+interface CreditsModalProps {
+  onOpenChange?: (open: boolean) => void
+}
+
+export default function CreditsModal({ onOpenChange }: CreditsModalProps) {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
@@ -65,6 +69,10 @@ export default function CreditsModal() {
     const t = window.setTimeout(() => setOpen(true), APPEAR_DELAY_MS)
     return () => window.clearTimeout(t)
   }, [])
+
+  useEffect(() => {
+    onOpenChange?.(open)
+  }, [open, onOpenChange])
 
   useEffect(() => {
     if (!open) return
@@ -115,12 +123,12 @@ export default function CreditsModal() {
             onPointerDown={(e) => e.stopPropagation()}
             className="relative w-[380px] max-w-[92vw] overflow-hidden rounded-[24px]"
             style={{
-              background: 'var(--color-note-cream)',
+              background: 'var(--color-note-gold)',
               boxShadow:
                 'inset 0 1px 0 rgba(255,255,255,0.55), ' +
                 '0 1px 2px rgba(0,0,0,0.04), ' +
                 '0 24px 64px -12px rgba(0,0,0,0.35), ' +
-                '0 32px 80px -20px rgba(245,184,0,0.45)',
+                '0 32px 80px -20px color-mix(in oklab, var(--color-accent-gold) 45%, transparent)',
             }}
           >
             {/* Tape strip — playful sticky-note touch */}
@@ -164,7 +172,7 @@ export default function CreditsModal() {
                   href="https://x.com/ayomicoder"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline decoration-[var(--color-accent-cream)] decoration-2 underline-offset-[3px] font-semibold text-ink-900 hover:decoration-ink-900 transition-colors"
+                  className="underline decoration-[var(--color-accent-gold)] decoration-2 underline-offset-[3px] font-semibold text-ink-900 hover:decoration-ink-900 transition-colors"
                 >
                   Ayomide Aluko
                 </a>
@@ -190,7 +198,7 @@ export default function CreditsModal() {
                   whileHover={{ y: -0.5 }}
                   whileTap={{ scale: 0.97 }}
                   transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-                  className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-ink-950 text-white text-[14px] font-semibold tracking-[-0.01em]"
+                  className="flex h-11 flex-1 items-center justify-center gap-2 rounded-full bg-ink-950 text-paper text-[14px] font-semibold tracking-[-0.01em]"
                   style={{
                     boxShadow:
                       'inset 0 1px 0 rgba(255,255,255,0.12), 0 6px 16px -4px rgba(0,0,0,0.35)',

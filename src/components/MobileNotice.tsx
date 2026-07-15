@@ -3,10 +3,10 @@ import { motion, type Variants } from 'motion/react'
 const EASE_OUT = [0.16, 1, 0.3, 1] as const
 
 const STICKIES = [
-  { tint: 'var(--color-note-cream)',  accent: '#f5b800', rot: -10, x: -18, y: -6 },
-  { tint: 'var(--color-note-mint)',   accent: '#34c759', rot:  6,  x:  20, y: -16 },
-  { tint: 'var(--color-note-lilac)',  accent: '#af52de', rot:  -3, x:  -8, y:  18 },
-  { tint: 'var(--color-note-rose)',   accent: '#ff2d55', rot:  9,  x:  26, y:  14 },
+  { tint: 'var(--color-note-gold)',    accent: 'var(--color-accent-gold)',    rot: -10, x: -18, y: -6 },
+  { tint: 'var(--color-note-emerald)', accent: 'var(--color-accent-emerald)', rot:  6,  x:  20, y: -16 },
+  { tint: 'var(--color-note-violet)',  accent: 'var(--color-accent-violet)',  rot:  -3, x:  -8, y:  18 },
+  { tint: 'var(--color-note-wine)',    accent: 'var(--color-accent-wine)',    rot:  9,  x:  26, y:  14 },
 ]
 
 const wrap: Variants = {
@@ -58,7 +58,7 @@ const textVariants: Variants = {
 
 export default function MobileNotice() {
   return (
-    <div className="fixed inset-0 grid place-items-center overflow-hidden bg-white text-ink-900">
+    <div className="fixed inset-0 grid place-items-center overflow-hidden bg-paper text-ink-900">
       {/* Soft drifting aurora — keeps the same vibe as the canvas */}
       <motion.div
         aria-hidden
@@ -74,10 +74,10 @@ export default function MobileNotice() {
         className="pointer-events-none absolute inset-0"
         style={{
           background: [
-            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, var(--color-accent-sky) 14%, transparent), transparent 70%)',
-            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, var(--color-accent-lilac) 12%, transparent), transparent 70%)',
-            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, var(--color-accent-rose) 10%, transparent), transparent 70%)',
-            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, var(--color-accent-cream) 10%, transparent), transparent 75%)',
+            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, var(--color-accent-ocean) 14%, transparent), transparent 70%)',
+            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, var(--color-accent-violet) 12%, transparent), transparent 70%)',
+            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, var(--color-accent-wine) 10%, transparent), transparent 70%)',
+            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, var(--color-accent-gold) 10%, transparent), transparent 75%)',
           ].join(', '),
           backgroundSize: '200% 200%',
         }}

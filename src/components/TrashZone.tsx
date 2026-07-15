@@ -37,14 +37,17 @@ const TrashZone = forwardRef<HTMLDivElement, Props>(function TrashZone(
             animate={{
               backgroundColor: active
                 ? 'rgba(244, 63, 94, 0.90)'
-                : 'rgba(24,24,31,0.50)',
+                : 'color-mix(in oklab, var(--color-paper) 80%, transparent)',
               color: active ? '#ffffff' : 'var(--color-ink-700)',
             }}
             transition={{ duration: 0.18, ease: EASE_OUT }}
             style={{
               boxShadow: active
-                ? '0 12px 36px -6px rgba(244,63,94,0.50), 0 0 0 1px rgba(244,63,94,0.35), inset 0 1px 0 rgba(255,255,255,0.04)'
-                : 'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 0.5px rgba(255,255,255,0.04), 0 6px 14px -4px rgba(0,0,0,0.25), 0 22px 48px -12px rgba(0,0,0,0.35)',
+                ? '0 12px 36px -6px rgba(244,63,94,0.50), 0 0 0 1px rgba(244,63,94,0.35), inset 0 1px 0 rgba(255,255,255,0.12)'
+                : 'inset 0 1px 0 color-mix(in oklab, var(--color-ink-900) 8%, transparent), ' +
+                  'inset 0 0 0 0.5px color-mix(in oklab, var(--color-ink-900) 6%, transparent), ' +
+                  '0 6px 14px -4px rgba(0,0,0,0.20), ' +
+                  '0 22px 48px -12px rgba(0,0,0,0.30)',
               backdropFilter: 'saturate(220%) blur(32px)',
               WebkitBackdropFilter: 'saturate(220%) blur(32px)',
             }}

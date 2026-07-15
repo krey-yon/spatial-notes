@@ -13,18 +13,18 @@ interface TintStyle {
 }
 
 const TINT: Record<NoteTint, TintStyle> = {
-  onyx:     { bg: 'bg-[var(--color-note-onyx)]',     accent: '#818cf8' },
-  ocean:    { bg: 'bg-[var(--color-note-ocean)]',    accent: '#60a5fa' },
-  forest:   { bg: 'bg-[var(--color-note-forest)]',   accent: '#4ade80' },
-  plum:     { bg: 'bg-[var(--color-note-plum)]',     accent: '#e879f9' },
-  wine:     { bg: 'bg-[var(--color-note-wine)]',     accent: '#fb7185' },
-  copper:   { bg: 'bg-[var(--color-note-copper)]',   accent: '#fb923c' },
-  midnight: { bg: 'bg-[var(--color-note-midnight)]', accent: '#38bdf8' },
-  emerald:  { bg: 'bg-[var(--color-note-emerald)]',  accent: '#34d399' },
-  gold:     { bg: 'bg-[var(--color-note-gold)]',     accent: '#facc15' },
-  violet:   { bg: 'bg-[var(--color-note-violet)]',   accent: '#c084fc' },
-  teal:     { bg: 'bg-[var(--color-note-teal)]',     accent: '#2dd4bf' },
-  slate:    { bg: 'bg-[var(--color-note-slate)]',    accent: '#a1a1aa' },
+  onyx:     { bg: 'bg-[var(--color-note-onyx)]',     accent: 'var(--color-accent-onyx)' },
+  ocean:    { bg: 'bg-[var(--color-note-ocean)]',    accent: 'var(--color-accent-ocean)' },
+  forest:   { bg: 'bg-[var(--color-note-forest)]',   accent: 'var(--color-accent-forest)' },
+  plum:     { bg: 'bg-[var(--color-note-plum)]',     accent: 'var(--color-accent-plum)' },
+  wine:     { bg: 'bg-[var(--color-note-wine)]',     accent: 'var(--color-accent-wine)' },
+  copper:   { bg: 'bg-[var(--color-note-copper)]',   accent: 'var(--color-accent-copper)' },
+  midnight: { bg: 'bg-[var(--color-note-midnight)]', accent: 'var(--color-accent-midnight)' },
+  emerald:  { bg: 'bg-[var(--color-note-emerald)]',  accent: 'var(--color-accent-emerald)' },
+  gold:     { bg: 'bg-[var(--color-note-gold)]',     accent: 'var(--color-accent-gold)' },
+  violet:   { bg: 'bg-[var(--color-note-violet)]',   accent: 'var(--color-accent-violet)' },
+  teal:     { bg: 'bg-[var(--color-note-teal)]',     accent: 'var(--color-accent-teal)' },
+  slate:    { bg: 'bg-[var(--color-note-slate)]',    accent: 'var(--color-accent-slate)' },
 }
 
 const MIN_W = 180
@@ -32,23 +32,15 @@ const MIN_H = 120
 const MAX_W = 600
 const MAX_H = 700
 
-function hexToRgba(hex: string, alpha: number) {
-  const h = hex.replace('#', '')
-  const r = parseInt(h.slice(0, 2), 16)
-  const g = parseInt(h.slice(2, 4), 16)
-  const b = parseInt(h.slice(4, 6), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
 function buildShadow(accent: string, mode: 'rest' | 'selected' | 'editing' | 'dragging' | 'resizing') {
   const base =
     '0 1px 2px rgba(0,0,0,0.20), 0 6px 14px -4px rgba(0,0,0,0.30), 0 16px 36px -12px rgba(0,0,0,0.40)'
   if (mode === 'rest') return base
   if (mode === 'dragging' || mode === 'resizing')
-    return `0 2px 4px rgba(0,0,0,0.25), 0 22px 50px -10px rgba(0,0,0,0.35), 0 32px 80px -20px ${hexToRgba(accent, 0.40)}`
+    return `0 2px 4px rgba(0,0,0,0.25), 0 22px 50px -10px rgba(0,0,0,0.35), 0 32px 80px -20px color-mix(in oklab, ${accent} 40%, transparent)`
   if (mode === 'selected')
-    return `${base}, 0 18px 40px -12px ${hexToRgba(accent, 0.35)}, 0 8px 24px -8px ${hexToRgba(accent, 0.25)}`
-  return `${base}, 0 24px 60px -16px ${hexToRgba(accent, 0.55)}, 0 12px 36px -10px ${hexToRgba(accent, 0.40)}`
+    return `${base}, 0 18px 40px -12px color-mix(in oklab, ${accent} 35%, transparent), 0 8px 24px -8px color-mix(in oklab, ${accent} 25%, transparent)`
+  return `${base}, 0 24px 60px -16px color-mix(in oklab, ${accent} 55%, transparent), 0 12px 36px -10px color-mix(in oklab, ${accent} 40%, transparent)`
 }
 
 const SPRING = { type: 'spring' as const, stiffness: 420, damping: 32, mass: 0.7 }
@@ -360,6 +352,7 @@ function NoteCard({
   return (
     <div
       ref={wrapperRef}
+      data-note-id={note.id}
       style={{
         position: 'absolute',
         left: note.x,
@@ -449,6 +442,7 @@ function NoteCard({
                   ref={paletteBtnRef}
                   data-no-drag
                   data-color-trigger
+                  data-tour="palette"
                   initial={{ opacity: 0, scale: 0.7 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.7 }}
@@ -575,6 +569,7 @@ function NoteCard({
         {/* Resize handle — bottom-right grip. Fades in on hover/selection. */}
         <motion.div
           data-no-drag
+          data-tour="resize"
           onPointerDown={handleResizeDown}
           onPointerMove={handleResizeMove}
           onPointerUp={handleResizeUp}
