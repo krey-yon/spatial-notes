@@ -73,14 +73,19 @@ export default function ColorPicker({ open, anchor, current, onSelect, onClose }
       onClose()
     }
     document.addEventListener('pointerdown', handler, true)
-    return () => document.removeEventListener('pointerdown', handler, true)
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('pointerdown', handler, true)
+      document.removeEventListener('keydown', onKey)
+    }
   }, [open, onClose])
 
   if (typeof document === 'undefined') return null
 
   // 2 rows × 6 cols, h-6 swatches with gap-1.5 and px-2 py-2
-  const PILL_W = 200
-  const PILL_H = 68
+  const PILL_W = 224
+  const PILL_H = 112
   let left = 0
   let top = 0
   let origin = '50% 0%'
@@ -118,57 +123,57 @@ export default function ColorPicker({ open, anchor, current, onSelect, onClose }
             transformOrigin: origin,
           }}
           onPointerDown={(e) => e.stopPropagation()}
-          className="glass grid grid-cols-6 gap-1.5 rounded-[18px] p-2"
+          className="glass flex w-56 flex-col rounded-[18px] p-2.5"
         >
-          {TINTS.map((t) => {
-            const active = current === t.name
-            return (
-              <motion.button
-                key={t.name}
-                variants={swatchVariants}
-                aria-label={`Set color ${t.name}`}
-                aria-pressed={active}
-                whileTap={{ scale: 0.84 }}
-                whileHover={{ scale: 1.14, y: -1 }}
-                transition={{ type: 'spring', stiffness: 520, damping: 22 }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  onSelect(t.name)
-                }}
-                className="relative grid h-6 w-6 place-items-center rounded-full"
-                style={{
-                  background: t.bg,
-                  boxShadow: active
-                    ? '0 0 0 1.5px var(--color-ink-900), inset 0 1px 0 rgba(255,255,255,0.04)'
-                    : '0 0 0 0.5px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.03)',
-                }}
-              >
-                <AnimatePresence>
-                  {active && (
-                    <motion.svg
-                      key="check"
-                      initial={{ scale: 0.4, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0.4, opacity: 0 }}
-                      transition={{ duration: 0.14, ease: EASE_OUT }}
-                      width="10"
-                      height="10"
-                      viewBox="0 0 12 12"
-                      fill="none"
-                    >
-                      <path
-                        d="M3 6.3l2 2 4-4.6"
-                        stroke="var(--color-ink-900)"
-                        strokeWidth="1.8"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </motion.svg>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            )
-          })}
+          <div className="mb-2 flex items-center justify-between px-1">
+            <span className="text-[11px] font-semibold tracking-[-0.01em] text-ink-800">Material</span>
+            <span className="font-mono text-[8.5px] uppercase tracking-[0.08em] text-ink-500">12 finishes</span>
+          </div>
+          <div className="grid grid-cols-6 gap-1.5">
+            {TINTS.map((t) => {
+              const active = current === t.name
+              return (
+                <motion.button
+                  key={t.name}
+                  variants={swatchVariants}
+                  aria-label={`Set color ${t.name}`}
+                  aria-pressed={active}
+                  whileTap={{ scale: 0.84 }}
+                  whileHover={{ y: -1 }}
+                  transition={{ type: 'spring', stiffness: 520, damping: 22 }}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    onSelect(t.name)
+                  }}
+                  className="relative grid h-7 w-7 place-items-center rounded-[9px] border border-white/[0.08]"
+                  style={{
+                    background: t.bg,
+                    boxShadow: active
+                      ? '0 0 0 2px var(--color-ink-900), 0 0 0 4px color-mix(in oklab, var(--color-action) 38%, transparent), inset 0 1px 0 rgba(255,255,255,0.12)'
+                      : 'inset 0 1px 0 rgba(255,255,255,0.08)',
+                  }}
+                >
+                  <AnimatePresence>
+                    {active && (
+                      <motion.svg
+                        key="check"
+                        initial={{ scale: 0.4, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.4, opacity: 0 }}
+                        transition={{ duration: 0.14, ease: EASE_OUT }}
+                        width="10"
+                        height="10"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                      >
+                        <path d="M3 6.3l2 2 4-4.6" stroke="var(--color-ink-900)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                      </motion.svg>
+                    )}
+                  </AnimatePresence>
+                </motion.button>
+              )
+            })}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>,

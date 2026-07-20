@@ -1,9 +1,9 @@
 /**
  * =============================================================================
- * NOCTURNE — COMPLETE THEME CONFIGURATION
+ * PRISM — COMPLETE THEME CONFIGURATION
  * =============================================================================
- * A dark-first, jewel-toned workspace. Deep ink backgrounds, rich saturated
- * note colors, and refined glass materials.
+ * A freeform desktop instrument with graphite foundations, prismatic notes,
+ * luminous glass hardware, and a soft pearl light mode.
  *
  * @file src/theme.config.ts
  */
@@ -13,14 +13,14 @@
 // =============================================================================
 
 export const brand = {
-  name: 'notes',
+  name: 'vellum',
   phonetic: '',
-  description: 'notes — a spatial canvas for notes, lists, and half-formed ideas.',
-  titleSuffix: 'a quiet canvas for thinking',
+  description: 'Vellum is a private freeform canvas for notes, tasks, ideas, and visual thinking.',
+  titleSuffix: 'a freeform canvas for ideas',
   author: 'Ayomide Aluko',
   authorUrl: 'https://x.com/ayomicoder',
   favicon: '/favicon.svg',
-  themeColor: '#0b0b0f',
+  themeColor: '#070812',
   colorScheme: 'dark' as const,
 } as const
 
@@ -30,38 +30,38 @@ export const brand = {
 
 export const colors = {
   ink: {
-    paper: '#0b0b0f',
-    50: '#18181f',
-    100: '#22222c',
-    200: '#2e2e3a',
-    300: '#40404f',
-    400: '#5a5a6e',
-    500: '#78788c',
-    600: '#9a9aad',
-    700: '#b8b8c8',
-    800: '#d4d4de',
-    900: '#e8e8ec',
-    950: '#f2f2f5',
+    paper: '#070812',
+    50: '#10111d',
+    100: '#171925',
+    200: '#232635',
+    300: '#343849',
+    400: '#555a70',
+    500: '#7e849a',
+    600: '#a4a9ba',
+    700: '#c2c6d2',
+    800: '#e0e2e9',
+    900: '#f4f5f8',
+    950: '#ffffff',
   },
 
   note: {
-    onyx:     { bg: '#1a1a24', accent: '#818cf8' },
-    ocean:    { bg: '#151a2e', accent: '#60a5fa' },
-    forest:   { bg: '#152e1f', accent: '#4ade80' },
-    plum:     { bg: '#2e1a2e', accent: '#e879f9' },
-    wine:     { bg: '#2e1a1f', accent: '#fb7185' },
-    copper:   { bg: '#2e2215', accent: '#fb923c' },
-    midnight: { bg: '#12182e', accent: '#38bdf8' },
-    emerald:  { bg: '#152e24', accent: '#34d399' },
-    gold:     { bg: '#2e2a15', accent: '#facc15' },
-    violet:   { bg: '#22152e', accent: '#c084fc' },
-    teal:     { bg: '#152a2e', accent: '#2dd4bf' },
-    slate:    { bg: '#1e1e28', accent: '#a1a1aa' },
+    onyx:     { bg: '#1a1c2a', accent: '#9aa4ff' },
+    ocean:    { bg: '#10283e', accent: '#4cc9ff' },
+    forest:   { bg: '#143128', accent: '#66e3a4' },
+    plum:     { bg: '#31203d', accent: '#e78bff' },
+    wine:     { bg: '#3a202b', accent: '#ff758f' },
+    copper:   { bg: '#3a291d', accent: '#ff9f5a' },
+    midnight: { bg: '#172347', accent: '#6a8cff' },
+    emerald:  { bg: '#10362e', accent: '#36e6b0' },
+    gold:     { bg: '#39351c', accent: '#f7d44c' },
+    violet:   { bg: '#2a2050', accent: '#a78bfa' },
+    teal:     { bg: '#103439', accent: '#38e0d0' },
+    slate:    { bg: '#252734', accent: '#aeb6cb' },
   },
 
   action: {
-    DEFAULT: '#c4b5fd',
-    press: '#a78bfa',
+    DEFAULT: '#7c6cff',
+    press: '#6857f5',
   },
 
   danger: {
@@ -85,38 +85,38 @@ export const colors = {
 
 export const light = {
   ink: {
-    paper: '#f5f5f7',
-    50: '#fafafa',
-    100: '#f4f4f5',
-    200: '#e4e4e7',
-    300: '#d4d4d8',
-    400: '#a1a1aa',
-    500: '#71717a',
-    600: '#52525b',
-    700: '#3f3f46',
-    800: '#27272a',
-    900: '#18181b',
-    950: '#09090b',
+    paper: '#f5f6fa',
+    50: '#ffffff',
+    100: '#f9f9fc',
+    200: '#eceef4',
+    300: '#dadde7',
+    400: '#aab0c0',
+    500: '#7a8192',
+    600: '#5c6270',
+    700: '#414653',
+    800: '#282c35',
+    900: '#15171d',
+    950: '#08090c',
   },
 
   note: {
-    onyx:     { bg: '#e0e0f0', accent: '#6366f1' },
-    ocean:    { bg: '#dbe4f0', accent: '#3b82f6' },
-    forest:   { bg: '#d4edda', accent: '#22c55e' },
-    plum:     { bg: '#f0dbf0', accent: '#d946ef' },
-    wine:     { bg: '#f0dbe0', accent: '#f43f5e' },
-    copper:   { bg: '#f0e4d4', accent: '#f97316' },
-    midnight: { bg: '#d4e4f0', accent: '#0ea5e9' },
-    emerald:  { bg: '#d4f0e4', accent: '#10b981' },
-    gold:     { bg: '#f0ecd4', accent: '#eab308' },
-    violet:   { bg: '#e8d4f0', accent: '#a855f7' },
-    teal:     { bg: '#d4f0ec', accent: '#14b8a6' },
-    slate:    { bg: '#e4e4e8', accent: '#71717a' },
+    onyx:     { bg: '#e9eafd', accent: '#5d64e8' },
+    ocean:    { bg: '#dff4ff', accent: '#0096d6' },
+    forest:   { bg: '#e0f7e9', accent: '#16965a' },
+    plum:     { bg: '#f6e5ff', accent: '#a73bd0' },
+    wine:     { bg: '#ffe5eb', accent: '#d9375d' },
+    copper:   { bg: '#ffeadb', accent: '#d76518' },
+    midnight: { bg: '#e2e8ff', accent: '#4164db' },
+    emerald:  { bg: '#dff9f0', accent: '#009a75' },
+    gold:     { bg: '#fff5c9', accent: '#b78500' },
+    violet:   { bg: '#eee7ff', accent: '#7652df' },
+    teal:     { bg: '#dcf8f6', accent: '#008f87' },
+    slate:    { bg: '#e9ebf1', accent: '#687087' },
   },
 
   action: {
-    DEFAULT: '#6366f1',
-    press: '#4f46e5',
+    DEFAULT: '#635bff',
+    press: '#5148ed',
   },
 
   danger: {
@@ -141,17 +141,16 @@ export const light = {
 export const typography = {
   fontFamily: {
     sans: [
-      '"Inter"',
+      '"SF Pro Display"',
+      '"SF Pro Text"',
       '-apple-system',
       'BlinkMacSystemFont',
-      '"SF Pro Display"',
-      'system-ui',
-      '"Segoe UI"',
-      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
       'sans-serif',
     ],
     mono: [
-      '"JetBrains Mono"',
+      '"SFMono-Regular"',
       '"SF Mono"',
       'ui-monospace',
       'Menlo',
@@ -159,14 +158,13 @@ export const typography = {
       'monospace',
     ],
   },
-  fontCdnUrl:
-    'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap',
-  fontFeatures: '"cv11", "ss01"',
+  fontCdnUrl: '',
+  fontFeatures: '"kern", "liga", "calt"',
   fontSynthesis: { italic: true },
   weight: { normal: 400, medium: 500, semibold: 600, bold: 700, extrabold: 800 },
   body: {
-    color: '#e8e8ec',
-    letterSpacing: '-0.01em',
+    color: '#f4f5f8',
+    letterSpacing: '-0.012em',
     smoothing: 'antialiased' as const,
     rendering: 'optimizeLegibility' as const,
   },

@@ -112,7 +112,7 @@ export default function SelectionToolbar({ hostRef, active, onCommand }: Props) 
           // Don't let pointerdown blur the editor — keep selection alive
           onPointerDown={(e) => e.preventDefault()}
           onMouseDown={(e) => e.preventDefault()}
-          className="glass flex h-9 items-center gap-0.5 rounded-full px-1.5"
+          className="glass flex h-10 items-center gap-0.5 rounded-[14px] px-1.5"
         >
           <ToolBtn label="Bold" active={marks.bold} onClick={() => onCommand('bold')}>
             <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
@@ -130,7 +130,7 @@ export default function SelectionToolbar({ hostRef, active, onCommand }: Props) 
               <path d="M9.5 2.5H6M8 11.5H4.5M8.5 2.5L5.5 11.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </ToolBtn>
-          <span className="mx-1 h-4 w-px bg-black/[0.08]" />
+          <span className="mx-1 h-4 w-px bg-ink-900/[0.10]" />
           <ToolBtn
             label="Bulleted list"
             active={marks.unordered}
@@ -178,10 +178,10 @@ function ToolBtn({
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
       className={[
-        'grid h-7 w-7 place-items-center rounded-full transition-colors',
+        'grid h-7 w-7 place-items-center rounded-[8px] border border-transparent transition-colors',
         active
-          ? 'bg-ink-900 text-paper shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]'
-          : 'text-ink-700 hover:text-ink-900 hover:bg-black/[0.06]',
+          ? 'tool-button-primary text-white'
+          : 'text-ink-600 hover:border-ink-900/[0.06] hover:bg-ink-900/[0.07] hover:text-ink-900',
       ].join(' ')}
     >
       {children}

@@ -30,20 +30,20 @@ const TrashZone = forwardRef<HTMLDivElement, Props>(function TrashZone(
           }}
           exit={{ opacity: 0, y: 28, scale: 0.92 }}
           transition={{ duration: 0.24, ease: EASE_OUT }}
-          className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
+          className="fixed bottom-7 left-1/2 z-50 -translate-x-1/2"
           style={{ pointerEvents: 'none' }}
         >
           <motion.div
             animate={{
               backgroundColor: active
-                ? 'rgba(244, 63, 94, 0.90)'
-                : 'color-mix(in oklab, var(--color-paper) 80%, transparent)',
+                ? 'rgba(235, 68, 90, 0.94)'
+                : 'color-mix(in oklab, var(--color-ink-50) 76%, transparent)',
               color: active ? '#ffffff' : 'var(--color-ink-700)',
             }}
             transition={{ duration: 0.18, ease: EASE_OUT }}
             style={{
               boxShadow: active
-                ? '0 12px 36px -6px rgba(244,63,94,0.50), 0 0 0 1px rgba(244,63,94,0.35), inset 0 1px 0 rgba(255,255,255,0.12)'
+                ? '0 18px 44px -12px rgba(235,68,90,0.70), 0 0 0 1px rgba(255,117,143,0.48), inset 0 1px 0 rgba(255,255,255,0.22)'
                 : 'inset 0 1px 0 color-mix(in oklab, var(--color-ink-900) 8%, transparent), ' +
                   'inset 0 0 0 0.5px color-mix(in oklab, var(--color-ink-900) 6%, transparent), ' +
                   '0 6px 14px -4px rgba(0,0,0,0.20), ' +
@@ -51,26 +51,19 @@ const TrashZone = forwardRef<HTMLDivElement, Props>(function TrashZone(
               backdropFilter: 'saturate(220%) blur(32px)',
               WebkitBackdropFilter: 'saturate(220%) blur(32px)',
             }}
-            className="flex h-11 items-center gap-2.5 rounded-full px-5"
+            className="flex h-12 items-center gap-3 rounded-[16px] border border-ink-900/[0.09] px-4 pr-5"
           >
-            <motion.svg
+            <motion.div
               animate={{ rotate: active ? -8 : 0 }}
               transition={{ type: 'spring', stiffness: 500, damping: 18 }}
-              width="15"
-              height="15"
-              viewBox="0 0 16 16"
-              fill="none"
+              className="grid h-7 w-7 place-items-center rounded-[9px] bg-ink-900/[0.09]"
             >
-              <path
-                d="M3.5 4h9M6 4V2.75A.75.75 0 016.75 2h2.5a.75.75 0 01.75.75V4M5 4l.55 9.25A.75.75 0 006.3 14h3.4a.75.75 0 00.75-.75L11 4M6.75 6.5v5M9.25 6.5v5"
-                stroke="currentColor"
-                strokeWidth="1.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </motion.svg>
-            <span className="font-medium text-[12.5px] tracking-[-0.01em]">
-              {active ? 'Release to delete' : 'Drop here to delete'}
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                <path d="M3.5 4h9M6 4V2.75A.75.75 0 016.75 2h2.5a.75.75 0 01.75.75V4M5 4l.55 9.25A.75.75 0 006.3 14h3.4a.75.75 0 00.75-.75L11 4M6.75 6.5v5M9.25 6.5v5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </motion.div>
+            <span className="font-medium text-[12px] tracking-[-0.01em]">
+              {active ? 'Release to remove' : 'Move to trash'}
             </span>
           </motion.div>
         </motion.div>

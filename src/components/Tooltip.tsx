@@ -102,11 +102,11 @@ export default function Tooltip({
                 zIndex: 300,
                 pointerEvents: 'none',
               }}
-              className="glass flex items-center gap-1.5 rounded-md px-2 py-1 font-mono text-[10.5px] tracking-tight text-ink-900"
+              className="glass flex items-center gap-2 rounded-[9px] px-2.5 py-1.5 font-mono text-[9.5px] tracking-tight text-ink-800"
             >
               <span>{label}</span>
               {kbd && (
-                <kbd className="rounded bg-ink-900/10 px-1 py-px text-[9.5px] text-ink-700 dark:bg-paper/40 dark:text-ink-300">
+                <kbd className="rounded-[5px] border border-ink-900/[0.07] bg-ink-900/[0.07] px-1 py-px text-[8.5px] text-ink-600">
                   {kbd}
                 </kbd>
               )}

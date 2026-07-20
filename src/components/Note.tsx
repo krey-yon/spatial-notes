@@ -34,13 +34,13 @@ const MAX_H = 700
 
 function buildShadow(accent: string, mode: 'rest' | 'selected' | 'editing' | 'dragging' | 'resizing') {
   const base =
-    '0 1px 2px rgba(0,0,0,0.20), 0 6px 14px -4px rgba(0,0,0,0.30), 0 16px 36px -12px rgba(0,0,0,0.40)'
+    '0 1px 2px rgba(0,0,0,0.16), 0 10px 28px -12px rgba(0,0,0,0.42), 0 30px 70px -30px rgba(0,0,0,0.52)'
   if (mode === 'rest') return base
   if (mode === 'dragging' || mode === 'resizing')
-    return `0 2px 4px rgba(0,0,0,0.25), 0 22px 50px -10px rgba(0,0,0,0.35), 0 32px 80px -20px color-mix(in oklab, ${accent} 40%, transparent)`
+    return `0 4px 10px rgba(0,0,0,0.22), 0 26px 58px -15px rgba(0,0,0,0.46), 0 38px 90px -24px color-mix(in oklab, ${accent} 42%, transparent)`
   if (mode === 'selected')
-    return `${base}, 0 18px 40px -12px color-mix(in oklab, ${accent} 35%, transparent), 0 8px 24px -8px color-mix(in oklab, ${accent} 25%, transparent)`
-  return `${base}, 0 24px 60px -16px color-mix(in oklab, ${accent} 55%, transparent), 0 12px 36px -10px color-mix(in oklab, ${accent} 40%, transparent)`
+    return `${base}, 0 0 0 2px color-mix(in oklab, ${accent} 72%, transparent), 0 18px 50px -18px color-mix(in oklab, ${accent} 48%, transparent)`
+  return `${base}, 0 0 0 2px color-mix(in oklab, ${accent} 80%, transparent), 0 24px 64px -18px color-mix(in oklab, ${accent} 60%, transparent)`
 }
 
 const SPRING = { type: 'spring' as const, stiffness: 420, damping: 32, mass: 0.7 }
@@ -50,6 +50,7 @@ interface Props {
   note: Note
   scale: number
   selected: boolean
+  selectionMode?: boolean
   autoFocus?: boolean
   onSelect: () => void
   onChange: (patch: Partial<Note>) => void
@@ -73,7 +74,7 @@ function formatStamp(ts: number) {
 }
 
 function NoteCard({
-  note, scale, selected, autoFocus,
+  note, scale, selected, selectionMode = false, autoFocus,
   onSelect, onChange, onDelete, onToggleKind,
   onDragStart, onDragEnd, shouldDeleteOnDrop,
   onAutoFocused, onEditingChange, playSound,
@@ -353,6 +354,10 @@ function NoteCard({
     <div
       ref={wrapperRef}
       data-note-id={note.id}
+      role="group"
+      aria-label={isTodo ? 'Task card' : 'Note card'}
+      tabIndex={0}
+      className="rounded-[18px] focus-visible:ring-2 focus-visible:ring-action focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
       style={{
         position: 'absolute',
         left: note.x,
@@ -366,6 +371,12 @@ function NoteCard({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget || e.key !== 'Enter' || editing) return
+        e.preventDefault()
+        if (isTodo) onSelect()
+        else enterEditing()
+      }}
       onPointerCancel={(e) => {
           const s = dragState.current
           if (s?.rafId) cancelAnimationFrame(s.rafId)
@@ -389,17 +400,29 @@ function NoteCard({
         exit={{ opacity: 0, scale: 0.9, y: -6, transition: { duration: 0.18 } }}
         transition={interacting ? { duration: 0.18, ease: EASE_OUT } : SPRING}
         whileHover={editing || interacting ? undefined : { y: -1 }}
+        style={{ '--note-accent': tint.accent } as React.CSSProperties}
         className={[
-          'group relative h-full w-full rounded-md flex flex-col',
+          'note-card group relative flex h-full w-full flex-col rounded-[18px]',
           tint.bg,
           'text-ink-900',
-          editing ? 'cursor-text' : dragging ? 'cursor-grabbing' : 'cursor-grab active:cursor-grabbing',
+          editing
+            ? 'cursor-text'
+            : dragging
+              ? 'cursor-grabbing'
+              : selectionMode
+                ? 'cursor-crosshair'
+                : 'cursor-grab active:cursor-grabbing',
           'no-select overflow-hidden',
         ].join(' ')}
       >
         {/* Top bar — kind toggle + delete X. Visible whenever the note is the
             user's focus (selected or editing), only hidden mid drag/resize. */}
-        <div className="relative flex h-7 shrink-0 items-center justify-end gap-0.5 px-2 pt-2">
+        <div className="relative flex h-9 shrink-0 items-center justify-end gap-1 px-2.5 pt-2.5">
+          <span
+            aria-hidden
+            className="absolute left-3.5 top-4 h-1.5 w-5 rounded-full"
+            style={{ background: tint.accent, boxShadow: `0 0 10px color-mix(in oklab, ${tint.accent} 70%, transparent)` }}
+          />
           <AnimatePresence>
             {(selected || editing) && !dragging && (
               <>
@@ -419,7 +442,7 @@ function NoteCard({
                   }}
                   aria-label={isTodo ? 'Convert to note' : 'Convert to todo'}
                   title={isTodo ? 'Convert to note' : 'Convert to todo'}
-                  className="grid h-6 w-6 place-items-center rounded-full text-ink-900/55 hover:text-ink-900 hover:bg-black/[0.08] transition-colors"
+                  className="note-icon-button grid h-7 w-7 place-items-center rounded-[9px] text-ink-900/55 transition-colors hover:text-ink-900"
                 >
                   {isTodo ? (
                     // Note icon — three lines
@@ -463,7 +486,7 @@ function NoteCard({
                   aria-label="Change color"
                   title="Change color"
                   aria-expanded={pickerOpen}
-                  className="grid h-6 w-6 place-items-center rounded-full text-ink-900/55 hover:text-ink-900 hover:bg-black/[0.08] transition-colors"
+                  className="note-icon-button grid h-7 w-7 place-items-center rounded-[9px] text-ink-900/55 transition-colors hover:text-ink-900"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
                     <path
@@ -486,7 +509,7 @@ function NoteCard({
         </div>
 
         {/* Body — fills remaining space and scrolls */}
-        <div className="relative flex-1 overflow-auto px-4 pb-3 pt-1">
+        <div className="relative flex-1 overflow-auto px-5 pb-3 pt-2">
           {isTodo ? (
             <>
               <TodoList
@@ -505,7 +528,7 @@ function NoteCard({
                     animate={{ opacity: 0.4 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.18, ease: EASE_OUT }}
-                    className="pointer-events-none absolute left-[39px] top-1 text-[15px] leading-[1.5] tracking-[-0.005em] text-ink-800"
+                    className="pointer-events-none absolute left-[44px] top-2 text-[15px] leading-[1.55] tracking-[-0.012em] text-ink-800"
                   >
                     Add a task…
                   </motion.div>
@@ -529,7 +552,7 @@ function NoteCard({
                 onPaste={onEditorPaste}
                 onKeyDown={onEditorKeyDown}
                 className={[
-                  'rich-body text-[15px] leading-[1.5] tracking-[-0.005em] text-ink-900',
+                  'rich-body text-[15px] leading-[1.55] tracking-[-0.012em] text-ink-900',
                   'whitespace-pre-wrap break-words text-pretty',
                   'caret-ink-900 outline-none',
                   editing ? 'cursor-text' : '',
@@ -544,7 +567,7 @@ function NoteCard({
                     animate={{ opacity: editing ? 0.32 : 0.5 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.18, ease: EASE_OUT }}
-                    className="pointer-events-none absolute left-4 top-1 text-[15px] leading-[1.5] tracking-[-0.005em] text-ink-800"
+                    className="pointer-events-none absolute left-5 top-2 text-[15px] leading-[1.55] tracking-[-0.012em] text-ink-800"
                   >
                     {editing ? 'Type a thought…' : 'Empty note'}
                   </motion.div>
@@ -561,13 +584,14 @@ function NoteCard({
             y: editing || dragging ? 4 : 0,
           }}
           transition={{ duration: 0.18, ease: EASE_OUT }}
-          className="shrink-0 px-4 pb-2.5 pt-0 font-mono text-[10px] tracking-tight uppercase text-ink-700/55"
+          className="shrink-0 px-5 pb-3 pt-0 font-mono text-[9px] uppercase tracking-[0.06em] text-ink-700/50"
         >
           {formatStamp(note.updatedAt)}
         </motion.div>
 
         {/* Resize handle — bottom-right grip. Fades in on hover/selection. */}
-        <motion.div
+        <motion.button
+          type="button"
           data-no-drag
           data-tour="resize"
           onPointerDown={handleResizeDown}
@@ -579,17 +603,17 @@ function NoteCard({
           animate={{ opacity: selected || resizing ? 1 : 0 }}
           whileHover={{ opacity: 1 }}
           transition={{ duration: 0.18, ease: EASE_OUT }}
-          className="absolute right-0 bottom-0 z-10 h-5 w-5 cursor-nwse-resize"
+          className="absolute bottom-0 right-0 z-10 h-7 w-7 cursor-nwse-resize"
           style={{ touchAction: 'none' }}
         >
           <svg
             viewBox="0 0 16 16"
-            className="absolute right-1 bottom-1 h-3 w-3 text-ink-900/40"
+            className="absolute bottom-1.5 right-1.5 h-3.5 w-3.5 text-ink-900/45"
             fill="none"
           >
             <path d="M14 6L6 14M14 11L11 14" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
           </svg>
-        </motion.div>
+        </motion.button>
       </motion.div>
 
       {!isTodo && (

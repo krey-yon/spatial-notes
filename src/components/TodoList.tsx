@@ -89,7 +89,7 @@ export default function TodoList({
   }
 
   return (
-    <div ref={containerRef} className="flex flex-col gap-0.5" data-no-drag>
+    <div ref={containerRef} className="flex flex-col gap-1" data-no-drag>
       <AnimatePresence initial={false}>
         {items.map((item) => (
           <Row
@@ -133,7 +133,7 @@ function Row({ item, accent, onToggle, onText, onEnter, onBackspaceEmpty }: RowP
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -2, transition: { duration: 0.14 } }}
       transition={{ duration: 0.2, ease: EASE_OUT }}
-      className="group flex items-start gap-2 py-0.5"
+      className="group flex items-start gap-2.5 rounded-lg py-0.5"
     >
       <button
         type="button"
@@ -144,7 +144,7 @@ function Row({ item, accent, onToggle, onText, onEnter, onBackspaceEmpty }: RowP
           e.stopPropagation()
           onToggle()
         }}
-        className="relative grid shrink-0 place-items-center rounded-full transition-colors"
+        className="relative grid shrink-0 place-items-center rounded-[6px] transition-[background-color,box-shadow] duration-200"
         style={{
           width: '1em',
           height: '1em',
@@ -184,6 +184,8 @@ function Row({ item, accent, onToggle, onText, onEnter, onBackspaceEmpty }: RowP
         <div
           ref={textRef}
           data-item-id={item.id}
+          role="textbox"
+          aria-label="Task"
           contentEditable
           suppressContentEditableWarning
           spellCheck
@@ -202,7 +204,7 @@ function Row({ item, accent, onToggle, onText, onEnter, onBackspaceEmpty }: RowP
             }
           }}
           className={[
-            'text-[15px] leading-[1.5] tracking-[-0.005em] caret-ink-900 outline-none',
+            'text-[15px] leading-[1.55] tracking-[-0.012em] caret-ink-900 outline-none',
             'whitespace-pre-wrap break-words text-pretty',
             'transition-[color,opacity] duration-200',
             item.done ? 'text-ink-700/55' : 'text-ink-900',
