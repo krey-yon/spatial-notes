@@ -18,7 +18,7 @@ const MAX_HISTORY = 50
 
 type StoredNote = Partial<Note> & { id: string; body?: string }
 
-/** Map legacy tint names to the new Nocturne palette */
+/** Map legacy tint names to the current Prism material palette. */
 function migrateTint(tint: string | undefined): NoteTint {
   const legacyMap: Record<string, NoteTint> = {
     cream: 'gold', banana: 'gold', sand: 'copper', coral: 'wine',

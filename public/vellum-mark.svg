@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title desc">
-  <title id="title">Vellum</title>
-  <desc id="desc">Three luminous translucent sheets forming a V</desc>
+  <title id="title">Vellum logo</title><desc id="desc">Three luminous translucent sheets forming a V</desc>
   <defs>
     <linearGradient id="shell" x1="7" y1="3" x2="58" y2="61" gradientUnits="userSpaceOnUse"><stop stop-color="#23253B"/><stop offset=".52" stop-color="#0C0E19"/><stop offset="1" stop-color="#05060C"/></linearGradient>
     <linearGradient id="back" x1="12" y1="12" x2="44" y2="52" gradientUnits="userSpaceOnUse"><stop stop-color="#42D8D1" stop-opacity=".9"/><stop offset="1" stop-color="#427DFF" stop-opacity=".55"/></linearGradient>
@@ -10,12 +9,6 @@
     <filter id="glow" x="-45%" y="-45%" width="190%" height="200%"><feDropShadow dx="0" dy="4" stdDeviation="3.5" flood-color="#665BFF" flood-opacity=".48"/></filter>
   </defs>
   <rect x="2" y="2" width="60" height="60" rx="17" fill="url(#shell)"/><rect x="2.5" y="2.5" width="59" height="59" rx="16.5" fill="none" stroke="white" stroke-opacity=".13"/>
-  <g filter="url(#glow)">
-    <rect x="13.5" y="15" width="28" height="35" rx="7.5" transform="rotate(-9 13.5 15)" fill="url(#back)" stroke="white" stroke-opacity=".2"/>
-    <rect x="24" y="12" width="27" height="37" rx="7.5" transform="rotate(8 24 12)" fill="url(#mid)" stroke="white" stroke-opacity=".2"/>
-    <path d="M18 17.5A6.5 6.5 0 0 1 24.5 11h12.8c2.4 0 4.7 1 6.2 2.8l2.9 3.4c1 1.2 1.6 2.8 1.6 4.4v22.9a6.5 6.5 0 0 1-6.5 6.5h-17a6.5 6.5 0 0 1-6.5-6.5v-27Z" fill="url(#front)" fill-opacity=".92"/>
-    <path d="M37.4 11.2v6.1a4.4 4.4 0 0 0 4.4 4.4h6" fill="none" stroke="white" stroke-opacity=".72" stroke-width="1.2"/>
-  </g>
-  <path d="M24 30h17M24 35h14M24 40h10" stroke="#111528" stroke-opacity=".42" stroke-width="1.5" stroke-linecap="round"/>
-  <rect x="2" y="2" width="60" height="60" rx="17" fill="url(#shine)"/>
+  <g filter="url(#glow)"><rect x="13.5" y="15" width="28" height="35" rx="7.5" transform="rotate(-9 13.5 15)" fill="url(#back)" stroke="white" stroke-opacity=".2"/><rect x="24" y="12" width="27" height="37" rx="7.5" transform="rotate(8 24 12)" fill="url(#mid)" stroke="white" stroke-opacity=".2"/><path d="M18 17.5A6.5 6.5 0 0 1 24.5 11h12.8c2.4 0 4.7 1 6.2 2.8l2.9 3.4c1 1.2 1.6 2.8 1.6 4.4v22.9a6.5 6.5 0 0 1-6.5 6.5h-17a6.5 6.5 0 0 1-6.5-6.5v-27Z" fill="url(#front)" fill-opacity=".92"/><path d="M37.4 11.2v6.1a4.4 4.4 0 0 0 4.4 4.4h6" fill="none" stroke="white" stroke-opacity=".72" stroke-width="1.2"/></g>
+  <path d="M24 30h17M24 35h14M24 40h10" stroke="#111528" stroke-opacity=".42" stroke-width="1.5" stroke-linecap="round"/><rect x="2" y="2" width="60" height="60" rx="17" fill="url(#shine)"/>
 </svg>

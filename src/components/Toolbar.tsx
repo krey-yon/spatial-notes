@@ -36,23 +36,19 @@ const Brand = memo(function Brand({ count }: { count: number }) {
       initial={BRAND_INITIAL}
       animate={BRAND_ANIMATE}
       transition={BRAND_TRANSITION}
-      className="pointer-events-none fixed left-5 top-5 z-50 flex items-center gap-2.5"
+      className="workspace-pill pointer-events-none fixed left-6 top-6 z-50 flex items-center gap-3 rounded-[18px] p-1.5 pr-4"
     >
-      <div className="grid h-7 w-7 place-items-center rounded-[8px] bg-ink-900 text-ink-50 shadow-soft">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <circle cx="5" cy="5.5" r="1.6" fill="currentColor" />
-          <circle cx="9.5" cy="4.5" r="1.1" fill="currentColor" opacity="0.7" />
-          <circle cx="8" cy="9.5" r="1.35" fill="currentColor" opacity="0.85" />
-        </svg>
-      </div>
+      <img src="/vellum-mark.svg" alt="" aria-hidden className="h-9 w-9 rounded-[11px]" />
       <div className="leading-none">
         <div className="flex items-baseline gap-1.5">
-          <span className="text-[14px] font-semibold tracking-[-0.018em] lowercase text-ink-900">
-            notes
+          <span className="text-[14px] font-semibold tracking-[-0.025em] text-ink-900">
+            Vellum
           </span>
+          <span className="rounded-full bg-ink-900/[0.07] px-1.5 py-0.5 text-[8px] font-semibold uppercase tracking-[0.08em] text-ink-500">Local</span>
         </div>
-        <div className="mt-1 font-mono text-[10px] tracking-tight uppercase text-ink-500">
-          {count} {count === 1 ? 'note' : 'notes'}
+        <div className="mt-1.5 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-500">
+          <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent-emerald)] shadow-[0_0_8px_var(--color-accent-emerald)]" />
+          {count} {count === 1 ? 'memory' : 'memories'}
         </div>
       </div>
     </motion.div>
@@ -60,11 +56,12 @@ const Brand = memo(function Brand({ count }: { count: number }) {
 })
 
 function IconButton({
-  label, onClick, primary, disabled, kbd, 'data-tour': dataTour, children,
+  label, onClick, primary, active, disabled, kbd, 'data-tour': dataTour, children,
 }: {
   label: string
   onClick: () => void
   primary?: boolean
+  active?: boolean
   disabled?: boolean
   /** Optional keyboard shortcut shown in the hover tooltip. */
   kbd?: string
@@ -74,6 +71,7 @@ function IconButton({
   const button = (
     <motion.button
       aria-label={label}
+      aria-pressed={active}
       onClick={onClick}
       whileTap={disabled ? undefined : { scale: 0.9 }}
       whileHover={disabled ? undefined : { y: -0.5 }}
@@ -81,11 +79,14 @@ function IconButton({
       disabled={disabled}
       data-tour={dataTour}
       className={[
-        'grid place-items-center rounded-lg transition-colors',
-        primary ? 'h-8 w-8 glass-btn' : 'h-8 w-8',
+        'grid h-9 w-9 place-items-center rounded-[11px] border border-transparent transition-colors',
+        primary ? 'tool-button-primary' : '',
+        active ? 'border-action/25 bg-action/15 text-action shadow-[inset_0_1px_0_rgba(255,255,255,.08)]' : '',
         disabled
           ? 'text-ink-700/30 cursor-not-allowed'
-          : 'text-ink-700 hover:text-ink-900 hover:bg-black/[0.05] dark:hover:bg-white/[0.06]',
+          : primary || active
+            ? ''
+            : 'text-ink-600 hover:text-ink-900 hover:bg-ink-900/[0.07]',
       ].join(' ')}
     >
       {children}
@@ -105,9 +106,9 @@ function Hint({ children }: { children: React.ReactNode }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.6, duration: 0.6 }}
-      className="pointer-events-none fixed right-5 top-5 z-50 hidden sm:block"
+      className="glass pointer-events-none fixed right-6 top-6 z-50 hidden rounded-[14px] p-1 sm:block"
     >
-      <div className="flex items-center gap-2 font-mono text-[10.5px] tracking-tight text-ink-400">
+      <div className="flex h-8 items-center gap-1 font-sans text-[10px] tracking-[-0.005em]">
         {children}
       </div>
     </motion.div>
@@ -116,10 +117,43 @@ function Hint({ children }: { children: React.ReactNode }) {
 
 function Kbd({ children }: { children: React.ReactNode }) {
   return (
-    <kbd className="glass-btn rounded-[5px] px-1.5 py-0.5 font-mono text-[10px] tracking-tight text-ink-700">
+    <kbd className="rounded-[6px] border border-ink-900/[0.08] bg-ink-900/[0.06] px-1.5 py-0.5 font-mono text-[8.5px] font-medium tracking-tight text-ink-700">
       {children}
     </kbd>
   )
+}
+
+function HintAction({ control, action, gesture }: {
+  control: string
+  action: string
+  gesture?: 'click' | 'drag'
+}) {
+  return (
+    <span className="flex items-center gap-1.5 rounded-[9px] px-2">
+      {gesture ? (
+        <span className="grid h-5 w-5 place-items-center rounded-[6px] bg-action/10 text-action">
+          {gesture === 'click' ? (
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
+              <circle cx="6" cy="6" r="2" fill="currentColor" />
+              <circle cx="6" cy="6" r="4.25" stroke="currentColor" strokeWidth="1" opacity=".45" />
+            </svg>
+          ) : (
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
+              <path d="M6 1.5v9M1.5 6h9M6 1.5 4.5 3M6 1.5 7.5 3M10.5 6 9 4.5M10.5 6 9 7.5M6 10.5 4.5 9M6 10.5 7.5 9M1.5 6 3 4.5M1.5 6 3 7.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </span>
+      ) : (
+        <Kbd>{control}</Kbd>
+      )}
+      <span className="font-medium text-ink-700">{gesture ? control : action}</span>
+      {gesture && <span className="text-ink-500">{action}</span>}
+    </span>
+  )
+}
+
+function HintDivider() {
+  return <span className="h-4 w-px bg-ink-900/[0.09]" aria-hidden />
 }
 
 export default function Toolbar({
@@ -141,27 +175,21 @@ export default function Toolbar({
   // Dynamic hint based on app state
   const hint = isEditing ? (
     <>
-      <Kbd>Escape</Kbd>
-      <span className="opacity-60">to finish</span>
-      <span className="opacity-30">·</span>
-      <Kbd>Cmd+B</Kbd>
-      <span className="opacity-60">bold</span>
+      <HintAction control="Esc" action="Finish" />
+      <HintDivider />
+      <HintAction control="⌘ B" action="Bold" />
     </>
   ) : hasSelection ? (
     <>
-      <Kbd>Delete</Kbd>
-      <span className="opacity-60">to remove</span>
-      <span className="opacity-30">·</span>
-      <Kbd>Drag</Kbd>
-      <span className="opacity-60">to move</span>
+      <HintAction control="Delete" action="Remove" />
+      <HintDivider />
+      <HintAction control="Drag" action="move" gesture="drag" />
     </>
   ) : (
     <>
-      <Kbd>Double-click</Kbd>
-      <span className="opacity-60">to add</span>
-      <span className="opacity-30">·</span>
-      <Kbd>Drag</Kbd>
-      <span className="opacity-60">to pan</span>
+      <HintAction control="Double-click" action="add" gesture="click" />
+      <HintDivider />
+      <HintAction control="Drag" action="pan" gesture="drag" />
     </>
   )
 
@@ -184,16 +212,16 @@ export default function Toolbar({
         }}
         style={{ pointerEvents: dimmed ? 'none' : undefined }}
         data-bottom-toolbar
-        className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2"
+        className="fixed bottom-7 left-1/2 z-50 -translate-x-1/2"
       >
-        <div className="glass flex items-center gap-0.5 rounded-2xl px-1.5 py-1.5">
-          <IconButton label="Add note" kbd="⌘N" primary data-tour="add-button" onClick={wrap(onAdd, 'create')}>
+        <div className="glass toolbar-shell flex items-center gap-1 p-1.5">
+          <IconButton label="Add memory" kbd="⌘N" primary data-tour="add-button" onClick={wrap(onAdd, 'create')}>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
               <path d="M7 2.5v9M2.5 7h9" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
           </IconButton>
 
-          <span className="mx-1 h-5 w-px bg-black/[0.08] dark:bg-white/[0.10]" />
+          <span className="mx-1 h-5 w-px bg-ink-900/[0.10]" />
 
           <IconButton label="Zoom out" kbd="⌘-" onClick={wrap(onZoomOut)}>
             <svg width="15" height="15" viewBox="0 0 14 14" fill="none">
@@ -206,7 +234,7 @@ export default function Toolbar({
           <Tooltip label="Reset zoom" kbd="⌘0">
             <button
               onClick={wrap(onResetView)}
-              className="min-w-[3.25rem] rounded-md px-1.5 py-1 font-mono text-[11px] tabular-nums tracking-tight text-ink-700 hover:text-ink-900 hover:bg-black/[0.05] transition-colors dark:hover:bg-white/[0.06]"
+              className="min-w-[3.5rem] rounded-[9px] px-1.5 py-1.5 font-mono text-[10px] font-medium tabular-nums tracking-tight text-ink-600 transition-colors hover:bg-ink-900/[0.07] hover:text-ink-900"
             >
               {Math.round(scale * 100)}%
             </button>
@@ -220,11 +248,12 @@ export default function Toolbar({
             </svg>
           </IconButton>
 
-          <span className="mx-1 h-5 w-px bg-black/[0.08] dark:bg-white/[0.10]" />
+          <span className="mx-1 h-5 w-px bg-ink-900/[0.10]" />
 
           <span data-feature-anchor="select" className="inline-flex">
             <IconButton
               label={cursorMode === 'hand' ? 'Box-select notes' : 'Pan canvas'}
+              active={cursorMode === 'select'}
               onClick={wrap(onToggleCursorMode, 'tapSoft')}
             >
               {cursorMode === 'hand' ? (

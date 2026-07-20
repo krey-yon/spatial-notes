@@ -57,21 +57,21 @@ function snap(notes: Note[], tourNoteId: string | null): Snap {
 const STEPS: StepDef[] = [
   {
     id: 'welcome',
-    title: 'Welcome to notes',
-    body: 'A tiny canvas for fast-moving thoughts. Five quick steps and you’re set.',
+    title: 'Meet your thinking space',
+    body: 'Vellum gives ideas room to take shape. Five small gestures and the canvas is yours.',
   },
   {
     id: 'create',
-    title: 'Drop your first note',
-    body: 'Tap the plus button below — or double-click anywhere on the canvas.',
-    hint: 'Waiting for a new note…',
+    title: 'Create a memory',
+    body: 'Tap the luminous plus below — or double-click anywhere that feels right.',
+    hint: 'Waiting for a new memory…',
     target: () => document.querySelector('[data-tour="add-button"]') as HTMLElement | null,
     isDone: (init, now) => now.count > init.count,
   },
   {
     id: 'move',
-    title: 'Move it around',
-    body: 'Pick the note up and drag it somewhere new on the canvas.',
+    title: 'Make space around it',
+    body: 'Pick the card up and place it anywhere on your canvas.',
     hint: 'Waiting for a drag…',
     target: (_notes, tourId) =>
       tourId
@@ -84,8 +84,8 @@ const STEPS: StepDef[] = [
   },
   {
     id: 'resize',
-    title: 'Resize it',
-    body: 'Grab the corner at the bottom-right of the note and drag to stretch.',
+    title: 'Shape the thought',
+    body: 'Grab the lower-right corner and give the idea more room.',
     hint: 'Waiting for a resize…',
     target: (_notes, tourId) => {
       if (!tourId) return null
@@ -102,8 +102,8 @@ const STEPS: StepDef[] = [
   },
   {
     id: 'color',
-    title: 'Make it yours',
-    body: 'Tap the palette icon on your note and pick a tint you like.',
+    title: 'Choose a material',
+    body: 'Open the card palette and choose a finish that matches the thought.',
     hint: 'Waiting for a color change…',
     target: (_notes, tourId) => {
       if (!tourId) return null
@@ -122,8 +122,8 @@ const STEPS: StepDef[] = [
   },
   {
     id: 'done',
-    title: 'You’re ready',
-    body: 'Drag a note to the trash to delete. Use the toolbar to zoom and toggle dark mode.',
+    title: 'The canvas is yours',
+    body: 'Move cards to trash to remove them. Zoom, select, and switch appearance from the dock.',
   },
 ]
 
@@ -244,7 +244,7 @@ export default function Tour({ active, step, notes, onNext, onFinish, onSelectNo
           exit={{ opacity: 0 }}
           width="100%"
           height="100%"
-          fill="rgba(8, 8, 12, 0.55)"
+          fill="rgba(3, 4, 10, 0.62)"
           mask={`url(#${maskId})`}
         />
       </svg>
@@ -291,7 +291,7 @@ export default function Tour({ active, step, notes, onNext, onFinish, onSelectNo
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.96 }}
           transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-          className="glass pointer-events-auto absolute rounded-[16px]"
+          className="glass pointer-events-auto absolute rounded-[22px]"
           style={{
             left: tipPos.x,
             top: tipPos.y,
@@ -301,8 +301,9 @@ export default function Tour({ active, step, notes, onNext, onFinish, onSelectNo
           }}
         >
           {/* Header — progress dots + skip */}
-          <div className="mb-3 flex items-center justify-between">
+          <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-1.5">
+              <img src="/vellum-mark.svg" alt="" aria-hidden className="mr-1 h-6 w-6 rounded-[8px]" />
               {STEPS.map((_, i) => (
                 <span
                   key={i}
@@ -319,16 +320,16 @@ export default function Tour({ active, step, notes, onNext, onFinish, onSelectNo
             </div>
             <button
               onClick={onFinish}
-              className="font-mono text-[10px] uppercase tracking-[0.06em] text-ink-500 hover:text-ink-900 transition-colors"
+              className="rounded-lg px-2 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-ink-500 transition-colors hover:bg-ink-900/[0.06] hover:text-ink-900"
             >
               Skip tour
             </button>
           </div>
 
-          <h2 className="text-[18px] font-semibold leading-[1.2] tracking-[-0.018em] text-ink-900">
+          <h2 className="text-[20px] font-semibold leading-[1.15] tracking-[-0.035em] text-ink-900">
             {current.title}
           </h2>
-          <p className="mt-1.5 text-[13px] leading-[1.5] tracking-[-0.005em] text-ink-600">
+          <p className="mt-2 text-[13px] leading-[1.55] tracking-[-0.008em] text-ink-600">
             {current.body}
           </p>
 
@@ -386,9 +387,9 @@ export default function Tour({ active, step, notes, onNext, onFinish, onSelectNo
               whileTap={stepDone ? { scale: 0.97 } : undefined}
               transition={{ type: 'spring', stiffness: 500, damping: 28 }}
               className={[
-                'h-9 rounded-[8px] px-5 text-[13px] font-semibold tracking-[-0.01em] transition-opacity',
+                'h-9 rounded-[11px] px-5 text-[12.5px] font-semibold tracking-[-0.01em] transition-opacity',
                 stepDone
-                  ? 'bg-ink-950 text-paper'
+                  ? 'tool-button-primary text-white'
                   : 'bg-ink-950/30 text-paper/60 cursor-not-allowed',
               ].join(' ')}
               style={{

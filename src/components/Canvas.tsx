@@ -247,7 +247,7 @@ export default function Canvas({}: CanvasProps = {}) {
     const size = GRID_SIZE * viewport.scale
     return {
       backgroundImage:
-        'radial-gradient(circle, color-mix(in oklab, currentColor 6%, transparent) 1px, transparent 1px)',
+        'radial-gradient(circle, color-mix(in oklab, currentColor 7%, transparent) 1px, transparent 1.15px)',
       backgroundSize: `${size}px ${size}px`,
       backgroundPosition: `${viewport.x}px ${viewport.y}px`,
     }
@@ -256,34 +256,24 @@ export default function Canvas({}: CanvasProps = {}) {
   const transform = `translate3d(${viewport.x}px, ${viewport.y}px, 0) scale(${viewport.scale})`
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-paper">
-      {/* Ambient aurora */}
+    <main className="canvas-aurora relative h-full w-full overflow-hidden bg-paper">
+      <h1 className="sr-only">Vellum freeform notes and visual thinking canvas</h1>
+
+      {/* Prismatic ambient light, vignette, and tactile grain. */}
       <motion.div
         aria-hidden
         initial={{ opacity: 0 }}
-        animate={{
-          opacity: 1,
-          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
-        }}
-        transition={{
-          opacity: { duration: 1.4, ease: [0.16, 1, 0.3, 1] },
-          backgroundPosition: { duration: 18, repeat: Infinity, ease: 'easeInOut' },
-        }}
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background: [
-            'radial-gradient(60% 35% at 50% 100%, color-mix(in oklab, var(--color-accent-ocean) 12%, transparent), transparent 70%)',
-            'radial-gradient(45% 30% at 25% 95%, color-mix(in oklab, var(--color-accent-violet) 10%, transparent), transparent 70%)',
-            'radial-gradient(40% 25% at 75% 95%, color-mix(in oklab, var(--color-accent-wine) 8%, transparent), transparent 70%)',
-            'radial-gradient(50% 30% at 50% 0%, color-mix(in oklab, var(--color-accent-gold) 6%, transparent), transparent 75%)',
-          ].join(', '),
-          backgroundSize: '200% 200%',
-        }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        className="canvas-vignette pointer-events-none absolute inset-0 z-0"
       />
+      <div aria-hidden className="noise-overlay pointer-events-none absolute inset-0 z-[1]" />
 
       <div
         ref={surfaceRef}
         data-surface
+        role="application"
+        aria-label="Vellum freeform canvas. Double-click to create a memory, drag to pan."
         onPointerDown={onSurfacePointerDown}
         onPointerMove={onSurfacePointerMove}
         onPointerUp={onSurfacePointerUp}
@@ -292,7 +282,7 @@ export default function Canvas({}: CanvasProps = {}) {
         className={[
           'absolute inset-0 z-10 text-ink-900',
           cursorMode === 'select'
-            ? 'cursor-default'
+            ? 'cursor-crosshair'
             : panActive.current
               ? 'cursor-grabbing'
               : 'cursor-grab',
@@ -314,6 +304,7 @@ export default function Canvas({}: CanvasProps = {}) {
                 note={n}
                 scale={viewport.scale}
                 selected={selectedId === n.id || selectedIds.has(n.id)}
+                selectionMode={cursorMode === 'select'}
                 autoFocus={autoFocusId === n.id}
                 onAutoFocused={() => setAutoFocusId(null)}
                 onSelect={() => {
@@ -354,7 +345,8 @@ export default function Canvas({}: CanvasProps = {}) {
               height: Math.abs(marquee.ey - marquee.sy),
               background: 'color-mix(in oklab, var(--color-action) 8%, transparent)',
               border: '1px solid color-mix(in oklab, var(--color-action) 60%, transparent)',
-              borderRadius: '4px',
+              borderRadius: '10px',
+              boxShadow: '0 0 0 3px color-mix(in oklab, var(--color-action) 10%, transparent)',
             }}
           />
         )}
@@ -409,6 +401,6 @@ export default function Canvas({}: CanvasProps = {}) {
           bringToFront(id)
         }}
       />
-    </div>
+    </main>
   )
 }
