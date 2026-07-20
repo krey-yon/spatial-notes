@@ -1,0 +1,17 @@
+{
+  "name": "Vellum — Visual Canvas",
+  "short_name": "Vellum",
+  "description": "A private freeform canvas for notes, tasks, ideas, and visual thinking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070812",
+  "theme_color": "#070812",
+  "icons": [
+    {
+      "src": "/vellum-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

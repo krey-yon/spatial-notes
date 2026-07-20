@@ -2,22 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#0b0b0f" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-    />
-    <title>notes · a quiet canvas for thinking</title>
-    <meta name="description" content="notes — a spatial canvas for notes, lists, and half-formed ideas." />
+
+    <title>Vellum — Freeform Notes &amp; Visual Thinking Canvas</title>
+    <meta name="description" content="Capture notes, build task lists, and organize ideas freely on a beautiful private visual canvas. Vellum keeps your thinking fluid, fast, and focused." />
+    <meta name="application-name" content="Vellum" />
+    <meta name="author" content="Ayomide Aluko" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:160" />
+    <link rel="canonical" href="/" />
+
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#070812" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f6fa" media="(prefers-color-scheme: light)" />
+    <script>
+      try {
+        const savedTheme = localStorage.getItem('spatial-notes:theme');
+        document.documentElement.dataset.theme = savedTheme === 'light' || savedTheme === 'dark'
+          ? savedTheme
+          : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      } catch {}
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="mask-icon" href="/vellum-mark.svg" color="#635bff" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Vellum" />
+    <meta property="og:title" content="Vellum — Thoughts Take Shape" />
+    <meta property="og:description" content="Capture notes, tasks, and half-formed ideas on a fast, private visual canvas built for focused thinking." />
+    <meta property="og:image" content="/vellum-social.svg" />
+    <meta property="og:image:type" content="image/svg+xml" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Vellum luminous layered-sheet logo" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Vellum — Thoughts Take Shape" />
+    <meta name="twitter:description" content="Capture notes, tasks, and ideas on a fast, private visual canvas." />
+    <meta name="twitter:image" content="/vellum-social.svg" />
+    <meta name="twitter:image:alt" content="Vellum luminous layered-sheet logo" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Vellum" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Vellum",
+        "applicationCategory": "ProductivityApplication",
+        "applicationSubCategory": "Note-taking software",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+        "description": "A private freeform canvas for visual notes, task lists, ideas, and focused thinking.",
+        "image": "/vellum-mark.svg",
+        "featureList": [
+          "Freeform note canvas",
+          "Task lists",
+          "Rich text formatting",
+          "Dark and light themes",
+          "Local-first persistence",
+          "Keyboard shortcuts"
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Ayomide Aluko"
+        }
+      }
+    </script>
+
     <script defer src="https://analytics.kreyon.in/script.js" data-website-id="28571562-73db-420f-ba5c-9a72d2559e9e"></script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main>
+        <h1>Vellum freeform notes and visual thinking canvas</h1>
+        <p>JavaScript is required to use this interactive canvas.</p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
